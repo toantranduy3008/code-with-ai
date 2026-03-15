@@ -1,0 +1,77 @@
+{
+    "menus": [
+        {
+            "id": "dashboard",
+            "label": "Dashboard",
+            "icon": "IconHome",
+            "path": "/dashboard",
+            "children": []
+        },
+        {
+            "id": "transaction",
+            "label": "Transaction",
+            "icon": "IconArrowsExchange",
+            "path": "/transaction",
+            "children": []
+        },
+        {
+            "id": "search-payment",
+            "label": "Search Payment",
+            "icon": "IconArrowsExchange",
+            "path": "/search-payment",
+            "children": [
+                {
+                    "id": "search-payment-list",
+                    "label": "Search Payment List",
+                    "path": "/search-payment/list"
+                }
+            ]
+        },
+        {
+            "id": "users",
+            "label": "Users",
+            "icon": "IconUsers",
+            "path": "/users",
+            "children": [
+                {
+                    "id": "users-list",
+                    "label": "User List",
+                    "path": "/users/list"
+                },
+                {
+                    "id": "users-add",
+                    "label": "Add User",
+                    "path": "/users/add"
+                },
+                {
+                    "id": "users-roles",
+                    "label": "Roles",
+                    "path": "/users/roles"
+                }
+            ]
+        },
+        {
+            "id": "settings",
+            "label": "Settings",
+            "icon": "IconSettings",
+            "path": "/settings",
+            "children": [
+                {
+                    "id": "settings-general",
+                    "label": "General",
+                    "path": "/settings/general"
+                },
+                {
+                    "id": "settings-security",
+                    "label": "Security",
+                    "path": "/settings/security"
+                },
+                {
+                    "id": "settings-notifications",
+                    "label": "Notifications",
+                    "path": "/settings/notifications"
+                }
+            ]
+        }
+    ]
+}

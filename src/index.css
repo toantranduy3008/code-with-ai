@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+/* Dark mode variant: Mantine sets data-mantine-color-scheme on <html> */
+@custom-variant dark (&:where([data-mantine-color-scheme="dark"], [data-mantine-color-scheme="dark"] *));
+
+body {
+  background-color: #f8fafc; /* slate-50 */
+  color: #0f172a; /* slate-900 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[data-mantine-color-scheme="dark"] body {
+  background-color: #020617; /* slate-950 */
+  color: #e2e8f0; /* slate-200 */
+}
+
+/* Ensure Mantine notifications always render in the bottom-right corner */
+
+/* Override Mantine notification container position (Mantine uses a generated class name). */
+
+#root {
+  min-height: 100vh;
+}

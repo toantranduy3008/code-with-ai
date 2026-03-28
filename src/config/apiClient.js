@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { showToast } from '../config/toast' // Giả định đường dẫn đến hàm toast của bạn
 
 export class ApiError extends Error {
   constructor(message, { status, data, code } = {}) {
@@ -11,25 +12,21 @@ export class ApiError extends Error {
 }
 
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL ?? 'https://jsonplaceholder.typicode.com',
-  timeout: 10000, // 10 seconds
+  baseURL: import.meta.env.VITE_API_BASE_URL || '/bankdemo/api',
+  timeout: 10000,
 })
 
-// Attach auth headers & simple logging for every request
 apiClient.interceptors.request.use(
   (config) => {
-    const token = window.localStorage.getItem('authToken')
+    // Sử dụng 'token' hoặc 'authToken' tùy theo cách bạn lưu ở LoginPage
+    const token = window.localStorage.getItem('token')
     if (token) {
       config.headers = config.headers ?? {}
       config.headers.Authorization = `Bearer ${token}`
     }
 
     if (import.meta.env.DEV) {
-      // Lightweight request log in dev mode only
-      // eslint-disable-next-line no-console
-      console.debug('[api] request', config.method?.toUpperCase(), config.url, {
-        params: config.params,
-      })
+      console.debug(`🚀 [API] ${config.method?.toUpperCase()} -> ${config.url}`, config.params || config.data || '');
     }
 
     return config
@@ -39,39 +36,36 @@ apiClient.interceptors.request.use(
 
 const mapStatusToMessage = (status) => {
   switch (status) {
-    case 400:
-      return 'Bad request. Please check your input.'
-    case 401:
-      return 'You are not authorized. Please log in again.'
-    case 403:
-      return 'You do not have permission to perform this action.'
-    case 404:
-      return 'The requested resource was not found.'
-    default:
-      if (status && status >= 500) {
-        return 'The server encountered an error. Please try again later.'
-      }
-      return 'An unexpected error occurred.'
+    case 400: return 'Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.'
+    case 401: return 'Phiên làm việc hết hạn. Vui lòng đăng nhập lại.'
+    case 403: return 'Bạn không có quyền thực hiện thao tác này.'
+    case 404: return 'Không tìm thấy tài nguyên yêu cầu.'
+    case 500: return 'Lỗi hệ thống phía Server. Vui lòng thử lại sau.'
+    default: return 'Đã có lỗi xảy ra, vui lòng thử lại.'
   }
 }
 
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    return response.data;
+  },
   (error) => {
     const status = error.response?.status
-
-    // Handle request timeout
-    if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
-      return Promise.reject(
-        new ApiError('Request timed out. Please try again.', {
-          status: status ?? 0,
-          data: error.response?.data,
-          code: error.code,
-        }),
-      )
+    let message = mapStatusToMessage(status)
+    if (error.response?.data?.message) {
+      message = error.response.data.message
     }
 
-    const message = mapStatusToMessage(status)
+    if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
+      message = 'Kết nối quá hạn. Vui lòng kiểm tra mạng.'
+    }
+
+    // --- TỰ ĐỘNG HIỂN THỊ TOAST LỖI ---
+    showToast({
+      variant: 'error',
+      title: 'Lỗi hệ thống',
+      message: message
+    })
 
     return Promise.reject(
       new ApiError(message, {
@@ -84,4 +78,3 @@ apiClient.interceptors.response.use(
 )
 
 export default apiClient
-

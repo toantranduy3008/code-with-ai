@@ -21,7 +21,7 @@ function ProtectedRoute({ children }) {
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />
+    // return <Navigate to="/login" replace />
   }
 
   return children
@@ -34,7 +34,7 @@ function AppRoutes() {
     <Routes>
       <Route
         path="/login"
-        element={user ? <Navigate to="/dashboard" replace /> : <LoginPage />}
+        element={user ? <Navigate to="/transaction  " replace /> : <LoginPage />}
       />
 
       <Route
@@ -103,7 +103,7 @@ function AppRoutes() {
         }
       />
 
-<Route
+      <Route
         path="/search-payment/list"
         element={
           <ProtectedRoute>
@@ -114,7 +114,7 @@ function AppRoutes() {
         }
       />
 
-      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      <Route path="/" element={<Navigate to="/transaction" replace />} />
     </Routes>
   )
 }

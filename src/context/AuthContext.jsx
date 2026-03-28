@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { AuthContext } from './AuthContextDefinition'
 
 const initializeUser = () => {
-    const storedUser = localStorage.getItem('user')
+    const storedUser = sessionStorage.getItem('userSession')
     return storedUser ? JSON.parse(storedUser) : null
 }
 
@@ -12,12 +12,15 @@ export function AuthProvider({ children }) {
 
     const login = (userData) => {
         setUser(userData)
-        localStorage.setItem('user', JSON.stringify(userData))
+        sessionStorage.setItem('userSession', JSON.stringify(userData))
+        sessionStorage.setItem('token', userData.accessToken)
     }
 
     const logout = () => {
         setUser(null)
-        localStorage.removeItem('user')
+        sessionStorage.removeItem('token')
+        sessionStorage.removeItem('userSession')
+        sessionStorage.removeItem('user')
     }
 
     return (

@@ -1,5 +1,5 @@
 import { AppShell, NavLink, Group, Button, Text, Avatar, Collapse } from '@mantine/core'
-import { IconHome, IconUsers, IconSettings, IconLogout, IconChevronDown, IconArrowsExchange } from '@tabler/icons-react'
+import { IconHome, IconUsers, IconSettings, IconLogout, IconChevronDown, IconArrowsExchange, IconSearch } from '@tabler/icons-react'
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/useAuth.js'
@@ -12,6 +12,7 @@ const iconMap = {
     IconUsers,
     IconSettings,
     IconArrowsExchange,
+    IconSearch
 }
 
 export default function DashboardLayout({ children }) {
@@ -119,10 +120,10 @@ export default function DashboardLayout({ children }) {
                 <div className="p-4 border-b border-slate-200 dark:border-slate-700">
                     <Group gap="sm" justify="space-between" wrap="nowrap">
                         <Group gap="sm" wrap="nowrap" style={{ minWidth: 0 }}>
-                            <Avatar name={user?.name || 'User'} color="violet" />
+                            <Avatar name={user?.username || 'User'} color="violet" />
                             <div style={{ minWidth: 0 }}>
                                 <Text size="sm" fw={600} className="text-slate-800 dark:text-slate-100 truncate">
-                                    {user?.name}
+                                    {user?.username}
                                 </Text>
                                 <Text size="xs" className="text-slate-500 dark:text-slate-400 truncate block">
                                     {user?.email}
@@ -147,7 +148,7 @@ export default function DashboardLayout({ children }) {
                         leftSection={<IconLogout size={18} />}
                         onClick={handleLogout}
                     >
-                        Logout
+                        Đăng xuất
                     </Button>
                 </div>
             </AppShell.Navbar>

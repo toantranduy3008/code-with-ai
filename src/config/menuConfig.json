@@ -1,35 +1,28 @@
 {
     "menus": [
         {
-            "id": "dashboard",
-            "label": "Dashboard",
-            "icon": "IconHome",
-            "path": "/dashboard",
-            "children": []
-        },
-        {
             "id": "transaction",
-            "label": "Transaction",
+            "label": "Chuyển tiền/ Thanh toán",
             "icon": "IconArrowsExchange",
             "path": "/transaction",
             "children": []
         },
         {
             "id": "search-payment",
-            "label": "Search Payment",
-            "icon": "IconArrowsExchange",
+            "label": "Tìm kiếm",
+            "icon": "IconSearch",
             "path": "/search-payment",
             "children": [
                 {
                     "id": "search-payment-list",
                     "label": "Search Payment List",
-                    "path": "/search-payment/list"
+                    "path": "/search-payment/incoming"
                 }
             ]
         },
         {
             "id": "users",
-            "label": "Users",
+            "label": "Người dùng",
             "icon": "IconUsers",
             "path": "/users",
             "children": [
@@ -52,7 +45,7 @@
         },
         {
             "id": "settings",
-            "label": "Settings",
+            "label": "Cài đặt",
             "icon": "IconSettings",
             "path": "/settings",
             "children": [

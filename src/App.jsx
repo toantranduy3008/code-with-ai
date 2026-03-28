@@ -34,7 +34,7 @@ function AppRoutes() {
     <Routes>
       <Route
         path="/login"
-        element={user ? <Navigate to="/transaction  " replace /> : <LoginPage />}
+        element={user ? <Navigate to="/login  " replace /> : <LoginPage />}
       />
 
       <Route
@@ -114,7 +114,7 @@ function AppRoutes() {
         }
       />
 
-      <Route path="/" element={<Navigate to="/transaction" replace />} />
+      <Route path="/" element={<Navigate to="/login" replace />} />
     </Routes>
   )
 }

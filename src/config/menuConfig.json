@@ -11,12 +11,32 @@
             "id": "search-payment",
             "label": "Tìm kiếm",
             "icon": "IconSearch",
-            "path": "/search-payment",
+            "path": "/search",
             "children": [
                 {
-                    "id": "search-payment-list",
-                    "label": "Search Payment List",
-                    "path": "/search-payment/incoming"
+                    "id": "incoming-payment",
+                    "label": "Giao dịch đã nhận",
+                    "path": "/search/incoming-payment"
+                },
+                {
+                    "id": "outgoing-payment",
+                    "label": "Giao dịch đã gửi",
+                    "path": "/search/outgoing-payment"
+                },
+                {
+                    "id": "incoming-dispute",
+                    "label": "Tra soát đã nhận",
+                    "path": "/search/incoming-dispute"
+                },
+                {
+                    "id": "outgoing-dispute",
+                    "label": "Tra soát đã gửi",
+                    "path": "/search/outgoing-dispute"
+                },
+                {
+                    "id": "transaction-logs",
+                    "label": "Tra cứu log giao dịch",
+                    "path": "/search/transaction-logs"
                 }
             ]
         },

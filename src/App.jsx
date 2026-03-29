@@ -1,122 +1,94 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import { Loader, Center } from '@mantine/core'
-import { AuthProvider } from './context/AuthContext'
-import { useAuth } from './context/useAuth'
-import LoginPage from './pages/LoginPage'
-import DashboardLayout from './components/DashboardLayout'
-import { DashboardPage, UsersPage, SettingsPage } from './pages/DashboardPages'
-import { SecuritySettingsPage } from './pages/SecuritySettingsPage'
-import TransactionPage from './pages/TransactionPage'
-import SearchPaymentPage from './pages/SearchPaymentPage'
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { Loader, Center, Box } from '@mantine/core';
+import { AuthProvider } from './context/AuthContext';
+import { useAuth } from './context/useAuth';
+import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
+// Import Pages
+import LoginPage from './pages/LoginPage';
+import DashboardLayout from './components/DashboardLayout';
+import { DashboardPage, UsersPage, SettingsPage } from './pages/DashboardPages';
+import TransactionPage from './pages/TransactionPage';
+import { BaseSearchPage } from './components/BaseSearchPage';
 
-function ProtectedRoute({ children }) {
-  const { user, isLoading } = useAuth()
+// Component bảo vệ và bọc Layout dùng chung
+function ProtectedDashboard() {
+  const { user, isLoading } = useAuth();
 
   if (isLoading) {
     return (
       <Center h="100vh">
         <Loader color="violet" size="lg" />
       </Center>
-    )
+    );
   }
 
   if (!user) {
-    // return <Navigate to="/login" replace />
+    // return <Navigate to="/login" replace />;
   }
 
-  return children
+  return (
+    <DashboardLayout>
+      {/* Thêm Box nền xám nhạt để làm nổi bật các component bên trong */}
+      <Box bg="var(--mantine-color-body)" mih="100vh" p="md" style={{ transition: 'background 0.3s' }}>
+        <Outlet />
+      </Box>
+    </DashboardLayout>
+  );
 }
 
 function AppRoutes() {
-  const { user } = useAuth()
+  const { user } = useAuth();
 
   return (
     <Routes>
+      {/* Public Route */}
       <Route
         path="/login"
-        element={user ? <Navigate to="/login  " replace /> : <LoginPage />}
+        element={user ? <Navigate to="/dashboard" replace /> : <LoginPage />}
       />
 
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <DashboardLayout>
-              <DashboardPage />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
+      {/* Toàn bộ các trang cần bảo vệ và dùng Dashboard Layout nằm ở đây */}
+      <Route element={<ProtectedDashboard />}>
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/users" element={<UsersPage />} />
 
-      <Route
-        path="/users"
-        element={
-          <ProtectedRoute>
-            <DashboardLayout>
-              <UsersPage />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
+        {/* Nhóm Settings */}
+        <Route path="/settings" element={<SettingsPage />} />
 
-      <Route
-        path="/settings"
-        element={
-          <ProtectedRoute>
-            <DashboardLayout>
-              <SettingsPage />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
+        {/* Nhóm Giao dịch */}
+        <Route path="/transaction" element={<TransactionPage />} />
 
-      <Route
-        path="/settings/security"
-        element={
-          <ProtectedRoute>
-            <DashboardLayout>
-              <SecuritySettingsPage />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
+        {/* Cấu trúc các trang Tìm kiếm (Generic) */}
+        <Route path="/search">
+          <Route
+            path="incoming-payment"
+            element={<BaseSearchPage configId="incoming-payment" />}
+          />
+          <Route
+            path="outgoing-payment"
+            element={<BaseSearchPage configId="outgoing-payment" />}
+          />
+          <Route
+            path="incoming-dispute"
+            element={<BaseSearchPage configId="incoming-dispute" />}
+          />
+          <Route
+            path="outgoing-dispute"
+            element={<BaseSearchPage configId="outgoing-dispute" />}
+          />
+          <Route
+            path="transaction-logs"
+            element={<BaseSearchPage configId="transaction-logs" />}
+          />
+        </Route>
+      </Route>
 
-      <Route
-        path="/transaction"
-        element={
-          <ProtectedRoute>
-            <DashboardLayout>
-              <TransactionPage />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/search-payment"
-        element={
-          <ProtectedRoute>
-            <DashboardLayout>
-              <SearchPaymentPage />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/search-payment/list"
-        element={
-          <ProtectedRoute>
-            <DashboardLayout>
-              <SearchPaymentPage />
-            </DashboardLayout>
-          </ProtectedRoute>
-        }
-      />
-
-      <Route path="/" element={<Navigate to="/login" replace />} />
+      {/* Điều hướng mặc định */}
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
-  )
+  );
 }
 
 function App() {
@@ -126,8 +98,7 @@ function App() {
         <AppRoutes />
       </Router>
     </AuthProvider>
-  )
+  );
 }
 
-export default App
-
+export default App;

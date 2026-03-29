@@ -1,5 +1,6 @@
-import { AppShell, NavLink, Group, Button, Text, Avatar, Collapse } from '@mantine/core'
-import { IconHome, IconUsers, IconSettings, IconLogout, IconChevronDown, IconArrowsExchange, IconSearch } from '@tabler/icons-react'
+
+import { AppShell, NavLink, Group, Button, Text, Avatar, Collapse, ScrollArea, Box } from '@mantine/core'
+import { IconHome, IconUsers, IconSettings, IconLogout, IconChevronDown, IconArrowsExchange } from '@tabler/icons-react'
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/useAuth.js'
@@ -12,7 +13,6 @@ const iconMap = {
     IconUsers,
     IconSettings,
     IconArrowsExchange,
-    IconSearch
 }
 
 export default function DashboardLayout({ children }) {
@@ -108,39 +108,51 @@ export default function DashboardLayout({ children }) {
     return (
         <AppShell
             layout="alt"
-            navbar={{
-                width: 250,
-                breakpoint: 'sm',
-                collapsed: { mobile: true },
+            navbar={{ width: 250, breakpoint: 'sm', collapsed: { mobile: true } }}
+            styles={{
+                // ✅ Triệt tiêu màu trắng từ "gốc" của AppShell
+                root: { backgroundColor: 'var(--mantine-color-body)' },
+                main: {
+                    backgroundColor: 'var(--mantine-color-body)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    minHeight: '100vh' // AppShell.Main hiểu style này
+                }
             }}
-            className="bg-slate-50 dark:bg-slate-950"
         >
-            <AppShell.Navbar className="bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col">
-                {/* User Info */}
-                <div className="p-4 border-b border-slate-200 dark:border-slate-700">
-                    <Group gap="sm" justify="space-between" wrap="nowrap">
-                        <Group gap="sm" wrap="nowrap" style={{ minWidth: 0 }}>
-                            <Avatar name={user?.username || 'User'} color="violet" />
-                            <div style={{ minWidth: 0 }}>
-                                <Text size="sm" fw={600} className="text-slate-800 dark:text-slate-100 truncate">
-                                    {user?.username}
+            <AppShell.Navbar
+                p="md"
+                style={{
+                    backgroundColor: 'var(--mantine-color-body)',
+                    borderRight: '1px solid var(--mantine-color-default-border)'
+                }}
+            >
+                <AppShell.Section pb="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
+                    <Group justify="space-between" wrap="nowrap">
+                        <Group gap="sm" wrap="nowrap" style={{ flex: 1, minWidth: 0 }}>
+                            <Avatar src={user?.avatar} name={user?.username} color="violet" radius="xl" />
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                                <Text size="sm" fw={600} truncate c="var(--mantine-color-text)">
+                                    {user?.username || 'Guest'}
                                 </Text>
-                                <Text size="xs" className="text-slate-500 dark:text-slate-400 truncate block">
-                                    {user?.email}
+                                <Text size="xs" c="dimmed" truncate>
+                                    {user?.email || 'No email'}
                                 </Text>
                             </div>
                         </Group>
                         <ColorSchemeToggle />
                     </Group>
-                </div>
+                </AppShell.Section>
 
-                {/* Navigation from Config */}
-                <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-                    {renderMenuItems(menuConfig.menus)}
-                </nav>
+                {/* Body: Navigation - Dùng ScrollArea để menu không bị tràn */}
+                <AppShell.Section grow component={ScrollArea} my="md">
+                    <div className="space-y-1">
+                        {renderMenuItems(menuConfig.menus)}
+                    </div>
+                </AppShell.Section>
 
-                {/* Logout Button */}
-                <div className="p-4 border-t border-slate-200 dark:border-slate-700">
+                {/* Footer: Logout */}
+                <AppShell.Section pt="md" style={{ borderTop: '1px solid var(--mantine-color-default-border)' }}>
                     <Button
                         fullWidth
                         variant="light"
@@ -150,11 +162,16 @@ export default function DashboardLayout({ children }) {
                     >
                         Đăng xuất
                     </Button>
-                </div>
+                </AppShell.Section>
             </AppShell.Navbar>
 
-            <AppShell.Main className="bg-slate-50 dark:bg-slate-950">
-                {children}
+            <AppShell.Main>
+                {/* ✅ Box này cực kỳ quan trọng để che vệt trắng. 
+                   flex: 1 giúp nó chiếm nốt diện tích còn lại của màn hình.
+                */}
+                <Box style={{ flex: 1, backgroundColor: 'var(--mantine-color-body)' }}>
+                    {children}
+                </Box>
             </AppShell.Main>
         </AppShell>
     )

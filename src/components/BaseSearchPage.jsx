@@ -12,14 +12,11 @@ export function BaseSearchPage({ configId, handlers }) {
 
     const [activeFilters, setActiveFilters] = useState(() => {
         const today = getTodayRange();
-        return { fromDate: today.start, toDate: today.end, f63: '', pageSize: 10 };
+        return { fromDate: today.start, toDate: today.end, transRef: '', pageSize: 10 };
     });
 
     useEffect(() => {
-        const today = getTodayRange();
-        const defaultFilters = { fromDate: today.start, toDate: today.end, f63: '', pageSize: 10 };
-        setActiveFilters(defaultFilters);
-        fetchData(defaultFilters, 1);
+        fetchData(activeFilters, 1);
     }, [configId, fetchData]);
 
     if (!config) return <Text c="red">Cấu hình không hợp lệ</Text>;
@@ -28,7 +25,6 @@ export function BaseSearchPage({ configId, handlers }) {
         <Stack
             gap="lg"
             p="md"
-            // ✅ SỬA: Dùng var(--mantine-color-body) để tự đổi màu nền trang
             bg="var(--mantine-color-body)"
             style={{ mih: '100vh', borderRadius: rem(8) }}
         >
@@ -43,8 +39,6 @@ export function BaseSearchPage({ configId, handlers }) {
                     </Text>
                 </Box>
             </Group>
-
-            {/* ✅ CẢI TIẾN: Loại bỏ bg="white", dùng mặc định của Paper để tự thích ứng */}
             <Paper
                 p="md"
                 radius="md"

@@ -15,7 +15,7 @@ export function DynamicFilter({ extraConfigs = [], onSearch, loading }) {
     const [filters, setFilters] = useState({
         fromDate: today.start,
         toDate: today.end,
-        f63: '',
+        transRef: '',
         pageSize: 10
     });
 
@@ -47,8 +47,8 @@ export function DynamicFilter({ extraConfigs = [], onSearch, loading }) {
             <TextInput
                 {...inputProps}
                 label="F63"
-                value={filters.f63}
-                onChange={(e) => updateField('f63', e.target.value)}
+                value={filters.transRef}
+                onChange={(e) => updateField('transRef', e.target.value)}
             />
 
             {extraConfigs.map(cfg => (

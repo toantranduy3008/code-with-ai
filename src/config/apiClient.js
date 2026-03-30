@@ -19,7 +19,7 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(
   (config) => {
     // Sử dụng 'token' hoặc 'authToken' tùy theo cách bạn lưu ở LoginPage
-    const token = window.localStorage.getItem('token')
+    const token = sessionStorage.getItem('token')
     if (token) {
       config.headers = config.headers ?? {}
       config.headers.Authorization = `Bearer ${token}`

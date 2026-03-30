@@ -4,34 +4,43 @@ import { Badge } from '@mantine/core';
 export const SEARCH_CONFIGS = {
     'incoming-payment': {
         title: 'Giao dịch đã nhận',
-        apiEndpoint: '/api/v1/payments/incoming',
+        apiEndpoint: '/payment/listIncomingTrans',
         extraFilters: [
             { key: 'status', type: 'select', label: 'Trạng thái', data: ['SUCCESS', 'PENDING', 'FAILED'] },
             { key: 'bankCode', type: 'text', label: 'Mã ngân hàng' }
         ],
         columns: [
-            { key: 'f11', label: 'Mã GD' },
+            { key: 'traceNo', label: 'Số lưu vết' },
+            { key: 'transRef', label: 'Mã tham chiếu' },
             { key: 'amount', label: 'Số tiền', isNumber: true },
-            { key: 'status', label: 'Trạng thái', render: (v) => <Badge color="green">{v}</Badge> }
+            { key: 'transactionType', label: 'Loại giao dịch' },
+            { key: 'settlementStatus', label: 'Trạng thái quyết toán' },
+            { key: 'bankId', label: 'Ngân hàng phát lệnh' },
+            { key: 'benId', label: 'Ngân hàng Thụ hưởng' },
         ],
         rowActions: (row, handlers) => [
-            { label: 'Hoàn trả', icon: <IconRotateDot size={16} />, color: 'red', onClick: () => handlers.handleRefund(row) }
+            { label: 'Hoàn trả', icon: <IconRotateDot size={16} />, color: 'red', onClick: () => handlers.handleRefund(row) },
         ]
     },
     'outgoing-payment': {
         title: 'Giao dịch đã gửi',
-        apiEndpoint: '/api/v1/payments/outgoing',
+        apiEndpoint: '/payment/listTrans',
         extraFilters: [
             { key: 'status', type: 'select', label: 'Trạng thái', data: ['SUCCESS', 'PENDING', 'FAILED'] },
             { key: 'bankCode', type: 'text', label: 'Mã ngân hàng' }
         ],
         columns: [
-            { key: 'f11', label: 'Mã GD' },
-            { key: 'receiver', label: 'Người nhận' },
-            { key: 'amount', label: 'Số tiền', isNumber: true }
+            { key: 'traceNo', label: 'Số lưu vết' },
+            { key: 'transRef', label: 'Mã tham chiếu' },
+            { key: 'amount', label: 'Số tiền', isNumber: true },
+            { key: 'transactionType', label: 'Loại giao dịch' },
+            { key: 'settlementStatus', label: 'Trạng thái quyết toán' },
+            { key: 'bankId', label: 'Ngân hàng phát lệnh' },
+            { key: 'benId', label: 'Ngân hàng Thụ hưởng' },
         ],
         rowActions: (row, handlers) => [
-            { label: 'Kiểm tra trạng thái', icon: <IconSearch size={16} />, onClick: () => handlers.handleCheckStatus(row) }
+            { label: 'Kiểm tra trạng thái', icon: <IconSearch size={16} />, onClick: () => handlers.handleCheckStatus(row) },
+            { label: 'Tạo tra soát', icon: <IconSearch size={16} />, onClick: () => handlers.handleCreateDispute(row) },
         ]
     },
     'incoming-dispute': {

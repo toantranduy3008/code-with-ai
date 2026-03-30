@@ -9,18 +9,18 @@ export const useSearch = (apiEndpoint) => {
 
     const fetchData = useCallback(async (filters = {}, page = 1) => {
         setLoading(true);
-        await new Promise(resolve => setTimeout(resolve, 800)); // Giả lập độ trễ mạng
+        console.log(filters)
         try {
             const params = {
                 ...filters,
                 page: page - 1, // Spring Boot dùng 0-based index
                 size: filters.pageSize || 10,
-                fromDate: filters.fromDate?.toISOString(),
-                toDate: filters.toDate?.toISOString(),
+                beginDate: new Date(filters.fromDate).toISOString(),
+                endDate: new Date(filters.toDate).toISOString(),
             };
 
-            // var response = await apiClient.get(apiEndpoint, { params });
-            const response = MOCK_API_RESPONSES[apiEndpoint] || { content: [], totalPages: 0, totalElements: 0 };
+            var response = await apiClient.get(apiEndpoint, { params });
+            // const response = MOCK_API_RESPONSES[apiEndpoint] || { content: [], totalPages: 0, totalElements: 0 };
             console.log("API Response for", apiEndpoint, "with params", params, ":", response);
             const { content, totalPages, totalElements } = response;
 

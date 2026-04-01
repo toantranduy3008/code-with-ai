@@ -1,25 +1,78 @@
-import { IconSearch, IconRotateDot, IconMessageDots, IconFileDescription } from '@tabler/icons-react';
-import { Badge } from '@mantine/core';
+import { IconSearch, IconRotateDot, IconMessageDots, IconFileDescription, IconMoneybagMove, IconDetails } from '@tabler/icons-react';
+import { Badge, Text } from '@mantine/core';
 
 export const SEARCH_CONFIGS = {
     'incoming-payment': {
         title: 'Giao dịch đã nhận',
         apiEndpoint: '/payment/listIncomingTrans',
         extraFilters: [
-            { key: 'status', type: 'select', label: 'Trạng thái', data: ['SUCCESS', 'PENDING', 'FAILED'] },
-            { key: 'bankCode', type: 'text', label: 'Mã ngân hàng' }
+            // { key: 'status', type: 'select', label: 'Trạng thái', data: ['SUCCESS', 'PENDING', 'FAILED'] },
+            // { key: 'bankCode', type: 'text', label: 'Mã ngân hàng' }
         ],
         columns: [
+            {
+                key: 'stt',
+                label: 'STT',
+                // Dùng tham số thứ 2 của render là index trong mảng data
+                render: (_, __, index) => <Text size="sm" fw={500}>{index + 1}</Text>,
+            },
             { key: 'traceNo', label: 'Số lưu vết' },
             { key: 'transRef', label: 'Mã tham chiếu' },
-            { key: 'amount', label: 'Số tiền', isNumber: true },
-            { key: 'transactionType', label: 'Loại giao dịch' },
-            { key: 'settlementStatus', label: 'Trạng thái quyết toán' },
-            { key: 'bankId', label: 'Ngân hàng phát lệnh' },
-            { key: 'benId', label: 'Ngân hàng Thụ hưởng' },
+            {
+                key: 'amount',
+                label: 'Số tiền',
+                render: (value) => (
+                    <Text>
+                        {value > 0 ? new Intl.NumberFormat('en-US').format(value) : '0'}
+                    </Text>
+                ),
+            },
+            {
+                key: 'returnedAmount',
+                label: 'Số tiền đã hoàn trả',
+                render: (value) => (
+                    <Text>
+                        {value > 0 ? new Intl.NumberFormat('en-US').format(value) : '0'}
+                    </Text>
+                ),
+            },
+            {
+                key: 'transactionType',
+                label: 'Loại giao dịch',
+                render: (value) => (
+                    <Text >
+                        {value === 'IBFT' ? 'Chuyển tiền' : 'Thanh toán'}
+                    </Text>
+                )
+            },
+            {
+                key: 'settlementStatus',
+                label: 'Trạng thái quyết toán',
+                render: (value) => (
+                    <Badge variant="light" color={value === 'ACSP' ? 'green' : 'gray'}>
+                        {value}
+                    </Badge>
+                )
+            },
+            {
+                key: 'bankId',
+                label: 'Ngân hàng phát lệnh',
+                render: (value, row, i, h) => (
+                    <Text size="sm">{h?.getBankName?.(value) || value}</Text>
+                )
+            },
+            {
+                key: 'benId',
+                label: 'Ngân hàng thụ hưởng',
+                render: (value, row, i, h) => (
+                    <Text size="sm">{h?.getBankName?.(value) || value}</Text>
+                )
+            },
         ],
         rowActions: (row, handlers) => [
-            { label: 'Hoàn trả', icon: <IconRotateDot size={16} />, color: 'red', onClick: () => handlers.handleRefund(row) },
+            { label: 'Hoàn trả', icon: <IconRotateDot size={16} />, color: 'red', onClick: () => handlers?.handleRefund(row) },
+            { label: 'Tạo tra soát', icon: <IconMoneybagMove size={16} />, color: 'red', onClick: () => handlers?.handleCreateDispute(row) },
+            { label: 'Chi tiết giao dịch', icon: <IconDetails size={16} />, color: 'red', onClick: () => handlers?.handleViewDetails(row) },
         ]
     },
     'outgoing-payment': {

@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Stack, Title, Pagination, Group, Text, Paper, Box, Divider, rem, useMantineTheme } from '@mantine/core';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { Stack, Title, Pagination, Group, Text, Paper, Box, Divider, rem } from '@mantine/core';
 import { DynamicFilter } from '../components/DynamicFilter';
 import { DynamicTable } from '../components/DynamicTable';
 import { useSearch } from '../hooks/useSearch';
 import { SEARCH_CONFIGS } from '../config/searchConfigs';
 import { getTodayRange } from '../helper/dateUtils';
 
-export function BaseSearchPage({ configId, handlers }) {
+export const BaseSearchPage = forwardRef(({ configId, handlers = {} }, ref) => {
     const config = SEARCH_CONFIGS[configId];
     const { data, loading, pagination, fetchData } = useSearch(config?.apiEndpoint);
 
@@ -14,7 +14,11 @@ export function BaseSearchPage({ configId, handlers }) {
         const today = getTodayRange();
         return { fromDate: today.start, toDate: today.end, transRef: '', pageSize: 10 };
     });
-
+    useImperativeHandle(ref, () => ({
+        refresh: () => {
+            fetchData(activeFilters, pagination.activePage);
+        }
+    }));
     useEffect(() => {
         fetchData(activeFilters, 1);
     }, [configId, fetchData]);
@@ -98,4 +102,4 @@ export function BaseSearchPage({ configId, handlers }) {
             </Paper>
         </Stack>
     );
-}
+});

@@ -1,6 +1,6 @@
 
 import { AppShell, NavLink, Group, Button, Text, Avatar, Collapse, ScrollArea, Box } from '@mantine/core'
-import { IconHome, IconUsers, IconSettings, IconLogout, IconChevronDown, IconArrowsExchange } from '@tabler/icons-react'
+import { IconHome, IconUsers, IconSettings, IconLogout, IconChevronDown, IconArrowsExchange, IconSearch } from '@tabler/icons-react'
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/useAuth.js'
@@ -13,6 +13,7 @@ const iconMap = {
     IconUsers,
     IconSettings,
     IconArrowsExchange,
+    IconSearch
 }
 
 export default function DashboardLayout({ children }) {

@@ -1,8 +1,8 @@
-import { Table, ScrollArea, Box, Text, Center, Loader } from '@mantine/core';
+import { Table, Text } from '@mantine/core';
 import { RowActionMenu } from './RowActionMenu';
 
 // DynamicTable.jsx
-export function DynamicTable({ data, columns, rowActions, handlers, loading }) {
+export function DynamicTable({ data, columns, rowActions, handlers }) {
     return (
         <Table.ScrollContainer minWidth={800}>
             <Table verticalSpacing="md" highlightOnHover>
@@ -27,7 +27,9 @@ export function DynamicTable({ data, columns, rowActions, handlers, loading }) {
                             <Table.Tr key={i}>
                                 {columns.map((col) => (
                                     <Table.Td key={col.key}>
-                                        {col.render ? col.render(row[col.key], row) : row[col.key]}
+                                        {col.render
+                                            ? col.render(row[col.key], row, i, handlers) // Quan trọng nhất là biến 'handlers' cuối cùng
+                                            : row[col.key]}
                                     </Table.Td>
                                 ))}
 

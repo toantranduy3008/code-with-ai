@@ -10,6 +10,7 @@ import DashboardLayout from './components/DashboardLayout';
 import { DashboardPage, UsersPage, SettingsPage } from './pages/DashboardPages';
 import TransactionPage from './pages/TransactionPage';
 import { BaseSearchPage } from './components/BaseSearchPage';
+import IncomingPaymentPage from './pages/IncomingPaymentPage';
 
 // Component bảo vệ và bọc Layout dùng chung
 function ProtectedDashboard() {
@@ -63,7 +64,7 @@ function AppRoutes() {
         <Route path="/search">
           <Route
             path="incoming-payment"
-            element={<BaseSearchPage configId="incoming-payment" />}
+            element={<IncomingPaymentPage />}
           />
           <Route
             path="outgoing-payment"

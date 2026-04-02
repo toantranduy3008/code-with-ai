@@ -11,6 +11,9 @@ import { DashboardPage, UsersPage, SettingsPage } from './pages/DashboardPages';
 import TransactionPage from './pages/TransactionPage';
 import { BaseSearchPage } from './components/BaseSearchPage';
 import IncomingPaymentPage from './pages/IncomingPaymentPage';
+import OutgoingPaymentPage from './pages/OutgoingPaymentPage';
+import OutgoingDisputePage from './pages/OutgoingDisputePage';
+import IncomingDisputePage from './pages/IncomingDisputePage';
 
 // Component bảo vệ và bọc Layout dùng chung
 function ProtectedDashboard() {
@@ -68,15 +71,15 @@ function AppRoutes() {
           />
           <Route
             path="outgoing-payment"
-            element={<BaseSearchPage configId="outgoing-payment" />}
+            element={<OutgoingPaymentPage />}
           />
           <Route
             path="incoming-dispute"
-            element={<BaseSearchPage configId="incoming-dispute" />}
+            element={<IncomingDisputePage />}
           />
           <Route
             path="outgoing-dispute"
-            element={<BaseSearchPage configId="outgoing-dispute" />}
+            element={<OutgoingDisputePage />}
           />
           <Route
             path="transaction-logs"

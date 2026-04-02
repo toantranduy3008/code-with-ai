@@ -39,7 +39,7 @@ export function RefundModal({ opened, onClose, record, onConfirm, loading }) {
             onClose={onClose}
             centered
             size="md"
-            title={<Text fw={600} size="md" c="dark.4">Hoàn trả giao dịch</Text>}
+            title={<Text fw={600} size="sm" c="dimmed">Hoàn trả giao dịch</Text>}
             styles={{
                 content: { borderRadius: '8px' },
                 header: { borderBottom: '1px solid #f1f3f5', padding: '16px 20px' },

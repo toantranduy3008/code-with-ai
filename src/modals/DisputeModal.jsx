@@ -11,17 +11,17 @@ import {
     IconSend
 } from '@tabler/icons-react';
 
-export function DisputeModal({ opened, onClose, record, onConfirm, loading }) {
+export function DisputeModal({ opened, onClose, record, onConfirm, loading, type = "TCPL" }) {
     const form = useForm({
         initialValues: {
-            investigationType: '',
+            disputeType: '',
             content: '',
             amount: 0,
             investigationCode: '',
             attachment: null,
         },
         validate: {
-            investigationType: (value) => (!value ? 'Vui lòng chọn loại tra soát' : null),
+            disputeType: (value) => (!value ? 'Vui lòng chọn loại tra soát' : null),
             content: (value) => (value.length < 5 ? 'Nội dung quá ngắn' : null),
         },
     });
@@ -29,10 +29,24 @@ export function DisputeModal({ opened, onClose, record, onConfirm, loading }) {
     // Reset form khi mở modal
     useEffect(() => {
         if (opened) form.reset();
-    }, [opened]);
+        if (opened && record) {
+            form.initialize({
+                disputeType: '',
+                content: '',
+                amount: record.amount || 0,
+                investigationCode: '',
+                attachment: null,
+            });
+        }
+    }, [opened, record]);
 
     // Logic 1: Danh sách Loại tra soát dựa trên transactionType
     const getInvestigationOptions = () => {
+        if (type === "TCNL") {
+            return [
+                { value: 'RQSP', label: 'RQSP - Nghi ngờ gian lận' },
+            ];
+        }
         const common = [
             { value: 'RQRN', label: 'RQRN - Yêu cầu hoàn trả' },
             { value: 'RQSP', label: 'RQSP - Nghi ngờ gian lận' },
@@ -50,10 +64,10 @@ export function DisputeModal({ opened, onClose, record, onConfirm, loading }) {
     };
 
     // Logic 2: Hiển thị Số tiền tra soát (RQRN, RQSP, GDFT)
-    const showAmount = ['RQRN', 'RQSP', 'GDFT'].includes(form.values.investigationType);
+    const showAmount = ['RQRN', 'RQSP', 'GDFT'].includes(form.values.disputeType);
 
     // Logic 3: Hiển thị Mã tra soát (RQSP)
-    const showInvestCode = form.values.investigationType === 'RQSP';
+    const showInvestCode = form.values.disputeType === 'RQSP';
 
     return (
         <Modal
@@ -102,7 +116,7 @@ export function DisputeModal({ opened, onClose, record, onConfirm, loading }) {
                         data={getInvestigationOptions()}
                         rightSection={<IconChevronDown size={16} />}
                         searchable
-                        {...form.getInputProps('investigationType')}
+                        {...form.getInputProps('disputeType')}
                     />
 
                     {/* Mã tra soát - Chỉ hiện khi là RQSP */}

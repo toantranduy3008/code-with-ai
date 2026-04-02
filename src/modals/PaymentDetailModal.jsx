@@ -102,7 +102,7 @@ const PaymentDetailModal = ({ opened, onClose, record, handlers }) => {
                         <InfoCell label="Ngày quyết toán" value={record.settlementDate} />
                         <InfoCell label="Thời gian hệ thống" value={new Date(record.transDate).toLocaleString('vi-VN')} />
                         <Divider my={4} variant="dotted" />
-                        <InfoCell label="NH phát (Gửi)" value={handlers?.getBankName(record.bankId)} />
+                        <InfoCell label="NH gửi" value={handlers?.getBankName(record.bankId)} />
                         <InfoCell label="TK gửi" value={record.fromAccount} />
                         <InfoCell label="NH nhận" value={handlers?.getBankName(record.benId)} />
                         <InfoCell label="TK nhận" value={record.toAccount} />

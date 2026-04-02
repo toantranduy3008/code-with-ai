@@ -16,6 +16,13 @@ export const useSearch = (apiEndpoint) => {
                 size: filters.pageSize || 10,
                 beginDate: new Date(filters.fromDate).toISOString(),
                 endDate: new Date(filters.toDate).toISOString(),
+                senderId: "555666",
+                receiverId: "",
+                disputeId: '',
+                originalTranRef: filters.transRef || '',
+                disputeType: '',
+                disputeStatus: '',
+                sort: 'id,desc'
             };
 
             // var response = await apiClient.get(apiEndpoint, { params });

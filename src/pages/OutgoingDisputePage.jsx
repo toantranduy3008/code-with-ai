@@ -7,7 +7,7 @@ import { useBankList } from "../hooks/useBankList";
 import { DisputeModal } from "../modals/DisputeModal";
 import { generateFileAttachment } from "../helper/fileUtils";
 import PaymentDetailModal from "../modals/PaymentDetailModal";
-export default function IncomingPaymentPage() {
+export default function OutgoingDisputePage() {
     const [modal, setModal] = useState({ type: null, data: null });
     const [selectedRecord, setSelectedRecord] = useState(null);
     const [submitting, setSubmitting] = useState(false);
@@ -25,8 +25,32 @@ export default function IncomingPaymentPage() {
         status: { RJCT: 'RJCT-Từ chối', ACSP: 'ACSP-Quyết toán' }
     };
     const handlers = {
-        handleInvestigate: (row) => {
+        handleInvestigate: async (row) => {
             setSelectedRecord(row);
+            try {
+                const result = await apiClient.post('/invest/payment', { seqNo: row.seqNo });
+                if (result.responseCode === '00') {
+                    showToast({
+                        variant: 'success',
+                        title: 'Thành công',
+                        message: `Gửi yêu cầu tra cứu thành công.`,
+                    });
+                } else {
+                    showToast({
+                        variant: 'error',
+                        title: 'Thất bại',
+                        message: `Gửi yêu cầu tra cứu thất bại: ${result.responseMessage || 'Lỗi không xác định'}`,
+                    });
+                }
+            } catch (error) {
+                showToast({
+                    variant: 'error',
+                    title: 'Thất bại',
+                    message: `Không thể tra cứu trạng thái: ${error.message || 'Lỗi không xác định'}`,
+                });
+            } finally {
+                searchPageRef.current?.refresh();
+            }
         },
         handleRefund: (row) => {
             setSelectedRecord(row);
@@ -152,7 +176,7 @@ export default function IncomingPaymentPage() {
     return (
         <>
             <BaseSearchPage
-                configId="incoming-payment"
+                configId="outgoing-dispute"
                 handlers={handlers}
                 ref={searchPageRef}
             />
@@ -169,7 +193,7 @@ export default function IncomingPaymentPage() {
                 record={selectedRecord}
                 onConfirm={handleConfirmDispute}
                 loading={submitting}
-                type="TCNL"
+                type="TCPL"
             />
             <PaymentDetailModal
                 opened={modal.type === 'DETAIL'}

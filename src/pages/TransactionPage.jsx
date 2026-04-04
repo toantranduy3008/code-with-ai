@@ -173,6 +173,7 @@ export default function TransactionPage() {
                     qrType={qrType}
                     loading={loading}
                     onFieldChange={handleFieldChange}
+                    onUpdateFields={updateMultipleFields}
                     onQRClick={handleOpenQRModal}
                     onTransferClick={handleExecuteTransfer}
                     onInquiryBlur={handleInquiryBlur}

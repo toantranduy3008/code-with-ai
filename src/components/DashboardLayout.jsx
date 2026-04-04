@@ -111,13 +111,12 @@ export default function DashboardLayout({ children }) {
             layout="alt"
             navbar={{ width: 250, breakpoint: 'sm', collapsed: { mobile: !opened, desktop: !opened } }}
             styles={{
-                // ✅ Triệt tiêu màu trắng từ "gốc" của AppShell
                 root: { backgroundColor: 'var(--mantine-color-body)' },
                 main: {
                     backgroundColor: 'var(--mantine-color-body)',
                     display: 'flex',
                     flexDirection: 'column',
-                    minHeight: '100vh' // AppShell.Main hiểu style này
+                    minHeight: '100vh'
                 }
             }}
 
@@ -138,7 +137,7 @@ export default function DashboardLayout({ children }) {
                                     {user?.username || 'Guest'}
                                 </Text>
                                 <Text size="xs" c="dimmed" truncate>
-                                    {user?.email || 'No email'}
+                                    {user?.fullName || user?.username}
                                 </Text>
                             </div>
                         </Group>

@@ -53,56 +53,79 @@ export const TransactionResultModal = ({
         <Modal
             opened={opened}
             onClose={handleClose}
-            title={<Text fw={700} size="lg">Kết quả giao dịch</Text>}
             centered
-            radius="lg"
+            radius="xl" // Bo góc tròn hơn nhìn sẽ thân thiện hơn
             size="md"
+            withCloseButton={false} // Tự tạo nút đóng ở dưới cho cân đối
+            padding={0} // Để mình tùy biến background header
         >
-            <Stack gap="md" py="sm">
-                <Box ta="center">
-                    <Stack align='center' gap="xs">
-                        {status.icon}
-                        <Text size="lg" fw={700} c={`${status.color}.7`} mt="sm">
-                            GIAO DỊCH {status.label}
+            <Stack gap={0}>
+                {/* Phần Header Màu sắc theo trạng thái */}
+                <Box
+                    p="xl"
+                    bg={status.color === 'green' ? 'green.0' : 'red.0'}
+                    style={{
+                        borderRadius: '24px 24px 0 0',
+                        borderBottom: `1px dashed var(--mantine-color-${status.color}-2)`
+                    }}
+                >
+                    <Stack align="center" gap="xs">
+                        {/* Hiệu ứng vòng tròn xung quanh Icon */}
+                        <Box
+                            style={{
+                                background: 'white',
+                                borderRadius: '50%',
+                                padding: '10px',
+                                boxShadow: '0 8px 20px rgba(0,0,0,0.05)'
+                            }}
+                        >
+                            {status.icon}
+                        </Box>
+                        <Text size="xl" fw={800} c={`${status.color}.9`} mt="sm" family="monospace">
+                            {status.label === 'THÀNH CÔNG' ? 'Giao dịch thành công!' : 'Giao dịch thất bại'}
+                        </Text>
+                        <Text size="sm" c={`${status.color}.6`} fw={500} family="monospace">
+                            {new Date().toLocaleString('vi-VN')}
                         </Text>
                     </Stack>
                 </Box>
 
-                <Paper withBorder p="md" radius="md" bg="gray.0">
-                    <Stack gap="xs">
-                        <Group justify="space-between">
-                            <Text size="sm" c="dimmed">Người thụ hưởng:</Text>
-                            <Text size="sm" fw={600} style={{ textTransform: 'uppercase' }}>
-                                {formData.beneficiaryName}
+                {/* Phần Chi tiết Giao dịch */}
+                <Box p="xl">
+                    <Stack gap="lg">
+                        <Box ta="center">
+                            <Text size="xs" c="dimmed" tt="uppercase" lts={1} fw={700} mb={5}>Số tiền giao dịch</Text>
+                            <Text size="32px" fw={800} c="dark.6">
+                                {Intl.NumberFormat('vi-VN').format(formData.amount)}
+                                <Text component="span" size="lg" ml={5}>VND</Text>
                             </Text>
-                        </Group>
-                        <Group justify="space-between">
-                            <Text size="md" c="dimmed">Số tiền:</Text>
-                            <Text size="md" fw={700} c="violet.7">
-                                {Intl.NumberFormat('vi-VN').format(formData.amount)} VND
-                            </Text>
-                        </Group>
-                        <Divider label="Chi tiết giao dịch" labelPosition="center" />
-                        <Group justify="space-between">
-                            <Text size="xs" c="dimmed">Mã giao dịch:</Text>
-                            <Text size="xs" fw={500}>{transactionResult?.f11 || 'N/A'}</Text>
-                        </Group>
-                        <Group justify="space-between">
-                            <Text size="xs" c="dimmed">Mã tham chiếu:</Text>
-                            <Text size="xs" fw={500}>{formData?.f63 || 'N/A'}</Text>
-                        </Group>
-                        <Group justify="space-between">
-                            <Text size="xs" c="dimmed">Mã phản hồi:</Text>
-                            <Text size="xs" fw={500}>{transactionResult?.f39 || 'N/A'}</Text>
-                        </Group>
-                        <Group justify="space-between">
-                            <Text size="xs" c="dimmed">Nội dung:</Text>
-                            <Text size="xs" fw={500} ta="right" style={{ maxWidth: '60%' }}>
-                                {formData.description || 'Chuyển tiền qua QR'}
-                            </Text>
-                        </Group>
+                        </Box>
+
+                        <Paper withBorder p="lg" radius="lg" style={{ borderStyle: 'dashed', backgroundColor: '#fafafa' }}>
+                            <Stack gap="sm">
+                                <Group justify="space-between">
+                                    <Text size="sm" c="dimmed">Người thụ hưởng</Text>
+                                    <Text size="sm" fw={600}>{formData.beneficiaryName}</Text>
+                                </Group>
+
+                                <Group justify="space-between">
+                                    <Text size="xs" c="dimmed">Mã giao dịch (STAN)</Text>
+                                    <Text size="xs" fw={600} family="monospace">{transactionResult?.f11 || 'N/A'}</Text>
+                                </Group>
+                                <Group justify="space-between">
+                                    <Text size="xs" c="dimmed">Mã tham chiếu (F63)</Text>
+                                    <Text size="xs" fw={600} family="monospace">{formData?.f63 || 'N/A'}</Text>
+                                </Group>
+                                <Group justify="space-between">
+                                    <Text size="xs" c="dimmed">Nội dung</Text>
+                                    <Text size="xs" fw={500} ta="right" style={{ maxWidth: '60%' }}>
+                                        {formData.description || 'Chuyển tiền qua QR'}
+                                    </Text>
+                                </Group>
+                            </Stack>
+                        </Paper>
                     </Stack>
-                </Paper>
+                </Box>
             </Stack>
         </Modal>
     );

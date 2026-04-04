@@ -27,9 +27,9 @@ export const TransactionForm = ({
     banks,
     fetchingBanks,
     inquiryLoading,
-    qrType,
     loading,
     onFieldChange,
+    onUpdateFields,
     onQRClick,
     onTransferClick,
     onInquiryBlur
@@ -42,16 +42,27 @@ export const TransactionForm = ({
         onFieldChange('sourceTo', val || '');
     };
 
+    // const handleDestinationBankChange = (val) => {
+    //     onFieldChange('destinationBank', val || '');
+    // };
     const handleDestinationBankChange = (val) => {
-        onFieldChange('destinationBank', val || '');
+        onUpdateFields({
+            destinationBank: val,          // Cập nhật giá trị mới của ô đang nhập
+            beneficiaryName: '',     // Reset tên
+            amount: 0,               // Reset tiền
+            f63: '',                 // Reset token inquiry
+            description: '',          // Reset nội dung
+            destinationType: ''       // Reset số tài khoản/ thẻ
+        });
     };
-
     const handleDestinationTypeChange = (e) => {
-        onFieldChange('destinationType', e.target.value);
-    };
-
-    const handleAmountChange = (val) => {
-        onFieldChange('amount', val);
+        onUpdateFields({
+            destinationType: e.target.value,          // Cập nhật giá trị mới của ô đang nhập
+            beneficiaryName: '',     // Reset tên
+            amount: 0,               // Reset tiền
+            f63: '',                 // Reset token inquiry
+            description: '',          // Reset nội dung
+        });
     };
 
     const handleDescriptionChange = (e) => {
@@ -119,7 +130,7 @@ export const TransactionForm = ({
                     onChange={handleDestinationTypeChange}
                     radius="md"
                     size="md"
-                    disabled={qrType === 'dynamic'}
+                    // disabled={qrType === 'dynamic'}
                     onBlur={onInquiryBlur}
                 />
 
@@ -135,7 +146,6 @@ export const TransactionForm = ({
                         leftSection={<IconShieldCheck size={18} color={formData.beneficiaryName ? "green" : "gray"} />}
                         styles={() => ({
                             input: {
-                                fontWeight: 700,
                                 textTransform: 'uppercase',
                                 backgroundColor: 'var(--mantine-color-violet-light)',
                                 color: 'var(--mantine-color-violet-filled)',
@@ -145,7 +155,7 @@ export const TransactionForm = ({
                     />
                     {formData.beneficiaryName && (
                         <Group gap={4} pl={5}>
-                            <Text size="xs" c="green.8" fw={500}>✓ Đã xác thực qua Napas</Text>
+                            <Text size="xs" c="green.8" fw={500}>✓ Đã xác thực</Text>
                         </Group>
                     )}
                 </Stack>
@@ -166,24 +176,23 @@ export const TransactionForm = ({
 
                 <Stack gap={8}>
                     <NumberInput
-                        label="Số tiền"
+                        label="Số tiền chuyển"
                         placeholder="0"
                         value={formData.amount}
-                        onChange={handleAmountChange}
+                        onChange={(val) => onFieldChange('amount', val)}
                         thousandSeparator=","
+                        decimalSeparator="."
                         suffix=" VND"
                         hideControls
-                        radius="md"
-                        size="md"
+                        radius="md" size="md"
                         allowNegative={false}
                         styles={{
                             input: {
-                                fontWeight: 700,
-                                color: 'var(--mantine-color-violet-filled)',
-                                fontSize: '1.1rem'
+                                fontWeight: 400,
+                                fontSize: 'var(--mantine-font-size-md)',
+                                // color: 'var(--mantine-color-black)',
                             }
                         }}
-                    // disabled={qrType === 'dynamic'}
                     />
                 </Stack>
 

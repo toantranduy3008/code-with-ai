@@ -28,7 +28,7 @@ function ProtectedDashboard() {
   }
 
   if (!user) {
-    // return <Navigate to="/login" replace />;
+    return <Navigate to="/bankdemo/app/login" replace />;
   }
 
   return (
@@ -48,23 +48,23 @@ function AppRoutes() {
     <Routes>
       {/* Public Route */}
       <Route
-        path="/login"
-        element={user ? <Navigate to="/transaction" replace /> : <LoginPage />}
+        path="/bankdemo/app/login"
+        element={user ? <Navigate to="/bankdemo/app/transaction" replace /> : <LoginPage />}
       />
 
       {/* Toàn bộ các trang cần bảo vệ và dùng Dashboard Layout nằm ở đây */}
       <Route element={<ProtectedDashboard />}>
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/users" element={<UsersPage />} />
+        <Route path="/bankdemo/app/dashboard" element={<DashboardPage />} />
+        <Route path="/bankdemo/app/users" element={<UsersPage />} />
 
         {/* Nhóm Settings */}
-        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/bankdemo/app/settings" element={<SettingsPage />} />
 
         {/* Nhóm Giao dịch */}
-        <Route path="/transaction" element={<TransactionPage />} />
+        <Route path="/bankdemo/app/transaction" element={<TransactionPage />} />
 
         {/* Cấu trúc các trang Tìm kiếm (Generic) */}
-        <Route path="/search">
+        <Route path="/bankdemo/app/search">
           <Route
             path="incoming-payment"
             element={<IncomingPaymentPage />}
@@ -89,8 +89,8 @@ function AppRoutes() {
       </Route>
 
       {/* Điều hướng mặc định */}
-      <Route path="/" element={<Navigate to="/transaction" replace />} />
-      <Route path="*" element={<Navigate to="/transaction" replace />} />
+      <Route path="/" element={<Navigate to="/bankdemo/app/login" replace />} />
+      <Route path="*" element={<Navigate to="/bankdemo/app/login" replace />} />
     </Routes>
   );
 }

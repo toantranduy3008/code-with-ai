@@ -180,27 +180,35 @@ export default function OutgoingPaymentPage() {
                 handlers={handlers}
                 ref={searchPageRef}
             />
-            <RefundModal
-                opened={modal.type === 'REFUND'}
-                onClose={closeModal}
-                record={selectedRecord}
-                onConfirm={handleConfirmRefund}
-                loading={submitting}
-            />
-            <DisputeModal
-                opened={modal.type === 'DISPUTE'}
-                onClose={closeModal}
-                record={selectedRecord}
-                onConfirm={handleConfirmDispute}
-                loading={submitting}
-                type="TCPL"
-            />
-            <PaymentDetailModal
-                opened={modal.type === 'DETAIL'}
-                onClose={closeModal}
-                record={selectedRecord}
-                handlers={handlers}
-            />
+            {
+                selectedRecord &&
+                <>
+                    <RefundModal
+                        opened={modal.type === 'REFUND'}
+                        onClose={closeModal}
+                        record={selectedRecord}
+                        onConfirm={handleConfirmRefund}
+                        loading={submitting}
+                        handlers={handlers}
+                    />
+                    <DisputeModal
+                        opened={modal.type === 'DISPUTE'}
+                        onClose={closeModal}
+                        record={selectedRecord}
+                        onConfirm={handleConfirmDispute}
+                        loading={submitting}
+                        type="TCPL"
+                        handlers={handlers}
+                    />
+                    <PaymentDetailModal
+                        opened={modal.type === 'DETAIL'}
+                        onClose={closeModal}
+                        record={selectedRecord}
+                        handlers={handlers}
+                    />
+                </>
+            }
+
         </>
 
     );

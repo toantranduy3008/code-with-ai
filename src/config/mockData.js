@@ -482,15 +482,108 @@ export const MOCK_API_RESPONSES = {
         "numberOfElements": 2,
         "empty": false
     },
-    '/api/v1/logs/transactions': {
-        content: [
-            { timestamp: '2026-03-28 22:00:01', action: 'INIT_PAYMENT', f63: 'TX_999' },
-            { timestamp: '2026-03-28 22:01:45', action: 'VERIFY_OTP', f63: 'TX_999' },
-            { timestamp: '2026-03-28 22:02:10', action: 'SUCCESS', f63: 'TX_999' }
+    '/dispute/listOutgoingDisputes': {
+        "content": [
+            {
+                "id": 127498,
+                "disputeId": "6B015555A2CKFVA8",
+                "disputeCaseId": "0698555666040210541620260202460127",
+                "disputeAssigner": "555666",
+                "disputeAssignee": "970436",
+                "disputeCreationDateTime": "2026-04-02T10:54:16",
+                "disputeSenderReference": "0698555666040210541620260202460127",
+                "disputeType": "RQRN",
+                "disputeStatus": "OPEN",
+                "disputeAmount": 11111,
+                "origProcessingCode": "502020",
+                "origSystemTrace": "460127",
+                "origLocalTime": "102714",
+                "origLocalDate": "0402",
+                "origSendingMember": "970436",
+                "origCardAcceptorTerminalId": "10000000",
+                "origTransactionReference": "6092BIDCA2CKFVA8",
+                "originalTransactionId": 6277047,
+                "origTransactionAmount": 22222,
+                "origSettlementAmount": 22222,
+                "origReceivingMember": "555666",
+                "origSenderAcc": "THANGPHT",
+                "origReceiverAcc": "TOANTDBIDC"
+            },
+            {
+                "id": 127497,
+                "disputeId": "6B015555A2CKFVAM",
+                "disputeCaseId": "0698555666040210444620260204750340",
+                "disputeAssigner": "555666",
+                "disputeAssignee": "970436",
+                "disputeCreationDateTime": "2026-04-02T10:44:46",
+                "disputeSenderReference": "0698555666040210444620260204750340",
+                "disputeType": "RQSP",
+                "disputeStatus": "RJCT",
+                "disputeAmount": 111111,
+                "origProcessingCode": "502020",
+                "origSystemTrace": "750340",
+                "origLocalTime": "102707",
+                "origLocalDate": "0402",
+                "origSendingMember": "970436",
+                "origCardAcceptorTerminalId": "10000000",
+                "origTransactionReference": "6092BIDCA2CKFVAM",
+                "originalTransactionId": 6277046,
+                "origTransactionAmount": 111111,
+                "origSettlementAmount": 111111,
+                "origReceivingMember": "555666",
+                "origSenderAcc": "THANGPHT",
+                "origReceiverAcc": "TOANTDBIDC"
+            },
+            {
+                "id": 127498,
+                "disputeId": "6B015555A2CKFVAM",
+                "disputeCaseId": "0698555666040210444620260204750340",
+                "disputeAssigner": "555666",
+                "disputeAssignee": "970436",
+                "disputeCreationDateTime": "2026-04-02T10:44:46",
+                "disputeSenderReference": "0698555666040210444620260204750340",
+                "disputeType": "RQSP",
+                "disputeStatus": "EXPI",
+                "disputeAmount": 111111,
+                "origProcessingCode": "502020",
+                "origSystemTrace": "750340",
+                "origLocalTime": "102707",
+                "origLocalDate": "0402",
+                "origSendingMember": "970436",
+                "origCardAcceptorTerminalId": "10000000",
+                "origTransactionReference": "6092BIDCA2CKFVAM",
+                "originalTransactionId": 6277046,
+                "origTransactionAmount": 111111,
+                "origSettlementAmount": 111111,
+                "origReceivingMember": "555666",
+                "origSenderAcc": "THANGPHT",
+                "origReceiverAcc": "TOANTDBIDC"
+            }
         ],
-        totalPages: 10,
-        totalElements: 100,
-        size: 10,
-        number: 0
+        "pageable": {
+            "sort": {
+                "sorted": true,
+                "empty": false,
+                "unsorted": false
+            },
+            "pageNumber": 0,
+            "pageSize": 10,
+            "offset": 0,
+            "paged": true,
+            "unpaged": false
+        },
+        "last": true,
+        "totalPages": 1,
+        "totalElements": 2,
+        "size": 10,
+        "number": 0,
+        "sort": {
+            "sorted": true,
+            "empty": false,
+            "unsorted": false
+        },
+        "first": true,
+        "numberOfElements": 2,
+        "empty": false
     }
 };

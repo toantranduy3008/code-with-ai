@@ -20,7 +20,10 @@ const formatDateTime = (dateStr) => {
     try {
         const date = new Date(dateStr);
         return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')} ${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
-    } catch (e) { return dateStr; }
+    } catch (e) {
+        console.error("Lỗi định dạng ngày:", e);
+        return dateStr;
+    }
 };
 
 // Cải thiện InfoRow để hiển thị text sáng hơn trong Dark Mode
@@ -51,7 +54,7 @@ const SectionBlock = ({ title, children }) => (
     </Paper>
 );
 
-export default function DisputeDetailModal({ opened, onClose, record, onConfirm, loading, handlers }) {
+export default function DisputeDetailModal({ opened, onClose, record, onConfirm, loading, handlers, type = 'INCOMING' }) {
     const form = useForm({
         initialValues: { responseStatus: '', reason: '', file: null },
         validate: {
@@ -60,7 +63,7 @@ export default function DisputeDetailModal({ opened, onClose, record, onConfirm,
         },
     });
 
-    useEffect(() => { if (opened) form.reset(); }, [opened]);
+    useEffect(() => { form.reset(); }, [opened]);
 
     if (!record) return null;
 
@@ -125,7 +128,7 @@ export default function DisputeDetailModal({ opened, onClose, record, onConfirm,
                         </SimpleGrid>
 
                         {/* PHẦN PHẢN HỒI: FILE ĐÍNH KÈM Ở DƯỚI CÙNG & TƯƠNG THÍCH DARKMODE */}
-                        {options.length > 0 && (
+                        {options.length > 0 && type === 'INCOMING' && (
                             <Paper
                                 withBorder
                                 p="md"
@@ -170,6 +173,7 @@ export default function DisputeDetailModal({ opened, onClose, record, onConfirm,
                                                 clearable
                                                 {...form.getInputProps('file')}
                                                 size="sm"
+                                                multiple={false}
                                             />
                                         </Grid.Col>
                                     </Grid>

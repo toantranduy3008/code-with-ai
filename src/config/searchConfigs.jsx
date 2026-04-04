@@ -253,6 +253,9 @@ export const SEARCH_CONFIGS = {
                 label: 'Trạng thái tra soát',
             },
         ],
+        rowActions: (row, handlers) => [
+            { label: 'Chi tiết', icon: <IconMessageDots size={16} />, onClick: () => handlers.handleViewDetails(row) }
+        ]
     },
     'transaction-logs': {
         title: 'Tra cứu log giao dịch',

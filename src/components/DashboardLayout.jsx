@@ -1,12 +1,12 @@
 
 import { AppShell, NavLink, Group, Button, Text, Avatar, Collapse, ScrollArea, Box } from '@mantine/core'
-import { IconHome, IconUsers, IconSettings, IconLogout, IconChevronDown, IconArrowsExchange, IconSearch } from '@tabler/icons-react'
+import { IconHome, IconUsers, IconSettings, IconLogout, IconChevronDown, IconArrowsExchange, IconSearch, IconChevronLeft, IconMenu2 } from '@tabler/icons-react'
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/useAuth.js'
 import menuConfig from '../config/menuConfig.json'
 import ColorSchemeToggle from './ColorSchemeToggle'
-
+import { useDisclosure } from '@mantine/hooks';
 // Icon mapping
 const iconMap = {
     IconHome,
@@ -21,7 +21,7 @@ export default function DashboardLayout({ children }) {
     const { user, logout } = useAuth()
     const navigate = useNavigate()
     const location = useLocation()
-
+    const [opened, { toggle }] = useDisclosure(true);
     const handleLogout = () => {
         logout()
         navigate('/login')
@@ -109,7 +109,7 @@ export default function DashboardLayout({ children }) {
     return (
         <AppShell
             layout="alt"
-            navbar={{ width: 250, breakpoint: 'sm', collapsed: { mobile: true } }}
+            navbar={{ width: 250, breakpoint: 'sm', collapsed: { mobile: !opened, desktop: !opened } }}
             styles={{
                 // ✅ Triệt tiêu màu trắng từ "gốc" của AppShell
                 root: { backgroundColor: 'var(--mantine-color-body)' },
@@ -120,6 +120,7 @@ export default function DashboardLayout({ children }) {
                     minHeight: '100vh' // AppShell.Main hiểu style này
                 }
             }}
+
         >
             <AppShell.Navbar
                 p="md"
@@ -167,9 +168,15 @@ export default function DashboardLayout({ children }) {
             </AppShell.Navbar>
 
             <AppShell.Main>
-                {/* ✅ Box này cực kỳ quan trọng để che vệt trắng. 
-                   flex: 1 giúp nó chiếm nốt diện tích còn lại của màn hình.
-                */}
+                <Button
+                    onClick={toggle}
+                    variant="subtle"
+                    size="xs"
+                    mb="md"
+                    leftSection={opened ? <IconChevronLeft size={16} /> : <IconMenu2 size={16} />}
+                >
+                    {opened ? 'Thu gọn menu' : 'Mở rộng menu'}
+                </Button>
                 <Box style={{ flex: 1, backgroundColor: 'var(--mantine-color-body)' }}>
                     {children}
                 </Box>

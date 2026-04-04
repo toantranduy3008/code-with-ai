@@ -4,39 +4,39 @@
             "id": "transaction",
             "label": "Chuyển tiền/ Thanh toán",
             "icon": "IconArrowsExchange",
-            "path": "/transaction",
+            "path": "/bankdemo/app/transaction",
             "children": []
         },
         {
             "id": "search-payment",
             "label": "Tìm kiếm",
             "icon": "IconSearch",
-            "path": "/search",
+            "path": "/bankdemo/app/search",
             "children": [
-                {
-                    "id": "incoming-payment",
-                    "label": "Giao dịch đã nhận",
-                    "path": "/search/incoming-payment"
-                },
                 {
                     "id": "outgoing-payment",
                     "label": "Giao dịch đã gửi",
-                    "path": "/search/outgoing-payment"
+                    "path": "/bankdemo/app/search/outgoing-payment"
                 },
                 {
-                    "id": "incoming-dispute",
-                    "label": "Tra soát đã nhận",
-                    "path": "/search/incoming-dispute"
+                    "id": "incoming-payment",
+                    "label": "Giao dịch đã nhận",
+                    "path": "/bankdemo/app/search/incoming-payment"
                 },
                 {
                     "id": "outgoing-dispute",
                     "label": "Tra soát đã gửi",
-                    "path": "/search/outgoing-dispute"
+                    "path": "/bankdemo/app/search/outgoing-dispute"
+                },
+                {
+                    "id": "incoming-dispute",
+                    "label": "Tra soát đã nhận",
+                    "path": "/bankdemo/app/search/incoming-dispute"
                 },
                 {
                     "id": "transaction-logs",
                     "label": "Tra cứu log giao dịch",
-                    "path": "/search/transaction-logs"
+                    "path": "/bankdemo/app/search/transaction-logs"
                 }
             ]
         },
@@ -44,22 +44,22 @@
             "id": "users",
             "label": "Người dùng",
             "icon": "IconUsers",
-            "path": "/users",
+            "path": "/bankdemo/app/users",
             "children": [
                 {
                     "id": "users-list",
                     "label": "User List",
-                    "path": "/users/list"
+                    "path": "/bankdemo/app/users/list"
                 },
                 {
                     "id": "users-add",
                     "label": "Add User",
-                    "path": "/users/add"
+                    "path": "/bankdemo/app/users/add"
                 },
                 {
                     "id": "users-roles",
                     "label": "Roles",
-                    "path": "/users/roles"
+                    "path": "/bankdemo/app/users/roles"
                 }
             ]
         },
@@ -67,22 +67,22 @@
             "id": "settings",
             "label": "Cài đặt",
             "icon": "IconSettings",
-            "path": "/settings",
+            "path": "/bankdemo/app/settings",
             "children": [
                 {
                     "id": "settings-general",
                     "label": "General",
-                    "path": "/settings/general"
+                    "path": "/bankdemo/app/settings/general"
                 },
                 {
                     "id": "settings-security",
                     "label": "Security",
-                    "path": "/settings/security"
+                    "path": "/bankdemo/app/settings/security"
                 },
                 {
                     "id": "settings-notifications",
                     "label": "Notifications",
-                    "path": "/settings/notifications"
+                    "path": "/bankdemo/app/settings/notifications"
                 }
             ]
         }

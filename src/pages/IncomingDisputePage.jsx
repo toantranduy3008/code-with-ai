@@ -24,7 +24,8 @@ export default function IncomingDisputePage() {
     };
     const handlers = {
         getBankName: (bankId) => {
-            if (!banks || banks.length === 0) return bankId;
+            console.log("Mapping bankId:", bankId, "using banks list:", banks);
+            if (!banks || banks.length === 0 || typeof bankId === "undefined") return bankId;
             const bank = banks.find(b => b.value === bankId || b.code === bankId || b.shortName === bankId);
             return bank ? bank.label : bankId;
         },
@@ -35,6 +36,7 @@ export default function IncomingDisputePage() {
     };
     const closeModal = () => setModal({ type: null, data: null });
     const handleConfirmDisputeResponse = async (values) => {
+
         setSubmitting(true);
         try {
             const result = await apiClient.post('/dispute/answer', {

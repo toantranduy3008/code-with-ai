@@ -18,29 +18,32 @@ export const getFileBase64 = async (file) => {
         });
     }
 }
-export const generateFileAttachment = async (listFiles) => {
+export const generateFileAttachment = async (file) => {
     try {
-        let fileAttachment;
-        let result = []
-        fileAttachment = listFiles.map(async (item, index) => {
-            const binary = await getFileBase64(listFiles[index])
-            const subStringStartPoint = binary.toString().indexOf(';base64,') + ';base64,'.length
-            const binaryWithoutEncodeType = binary.substring(subStringStartPoint, binary.length)
-            return {
-                fileName: item.name,
-                mimeType: item.type,
-                charSet: 'utf-8',
-                encodeType: 'base64',
-                fileBinary: binaryWithoutEncodeType
-            }
-        })
+        console.log("Generating file attachment for:", file);
 
-        for (let index = 0; index < fileAttachment.length; index++) {
-            const element = await fileAttachment[index];
-            result.push(element)
-        }
+        // Nếu không có file truyền vào, trả về mảng rỗng ngay
+        if (!file) return [];
 
-        return result
+        // Lấy binary base64 của file duy nhất
+        const binary = await getFileBase64(file);
+
+        // Xử lý cắt chuỗi base64
+        const subStringStartPoint = binary.toString().indexOf(';base64,') + ';base64,'.length;
+        const binaryWithoutEncodeType = binary.substring(subStringStartPoint, binary.length);
+
+        // Tạo object kết quả
+        const fileData = {
+            fileName: file.name,
+            mimeType: file.type,
+            charSet: 'utf-8',
+            encodeType: 'base64',
+            fileBinary: binaryWithoutEncodeType
+        };
+
+        // Trả về mảng chứa 1 phần tử duy nhất
+        return [fileData];
+
     } catch (error) {
         showToast({
             variant: 'error',

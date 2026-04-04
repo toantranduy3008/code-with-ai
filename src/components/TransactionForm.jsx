@@ -183,7 +183,7 @@ export const TransactionForm = ({
                                 fontSize: '1.1rem'
                             }
                         }}
-                        disabled={qrType === 'dynamic'}
+                    // disabled={qrType === 'dynamic'}
                     />
                 </Stack>
 
@@ -194,7 +194,7 @@ export const TransactionForm = ({
                     onChange={handleDescriptionChange}
                     radius="md"
                     size="md"
-                    disabled={qrType === 'dynamic'}
+                // disabled={qrType === 'dynamic'}
                 />
 
                 <Divider my="sm" />

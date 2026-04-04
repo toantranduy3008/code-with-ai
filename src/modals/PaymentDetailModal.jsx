@@ -1,5 +1,7 @@
 import React from 'react';
-import { Modal, Text, Divider, Stack, Group, Badge, ScrollArea, SimpleGrid, Box } from '@mantine/core';
+import {
+    Modal, Text, Stack, Group, Badge, SimpleGrid, Box, Divider, Button, ScrollArea, Paper
+} from '@mantine/core';
 
 const MAPPER = {
     f60: {
@@ -13,122 +15,105 @@ const MAPPER = {
     transactionType: { IBFT: 'Chuyển tiền', PAYMENT: 'Thanh toán' },
 };
 
-const InfoCell = ({ label, value, color, fw = 500 }) => (
-    <Group justify="space-between" wrap="nowrap" gap="xl">
-        <Text size="sm" c="dimmed" style={{ flexShrink: 0 }}>{label}</Text>
-        <Text size="sm" fw={fw} c={color} ta="right" style={{ wordBreak: 'break-all' }}>
+// InfoRow chuẩn đồng bộ tuyệt đối với RefundModal
+const InfoRow = ({ label, value, color, fw = 500, isLong = false }) => (
+    <Box style={{ display: 'grid', gridTemplateColumns: '140px 1fr', gap: '10px', alignItems: 'baseline', marginBottom: '6px' }}>
+        <Text size="xs" c="dimmed">{label}</Text>
+        <Text size="sm" fw={fw} c={color} ta="right" style={{ wordBreak: isLong ? 'break-all' : 'normal' }}>
             {value || '---'}
         </Text>
-    </Group>
+    </Box>
 );
 
-const SectionTitle = ({ children }) => (
-    <Text fw={600} size="xs" c="blue.7" tt="uppercase" lts="0.5px" mb={4}>
-        {children}
-    </Text>
+// SectionBlock có khung Paper giống hệt RefundModal
+const SectionBlock = ({ title, children }) => (
+    <Paper
+        withBorder
+        p="sm"
+        radius="md"
+        style={{
+            height: '100%',
+            backgroundColor: 'var(--mantine-color-body)',
+        }}
+    >
+        <Text fw={700} size="xs" c="blue.5" tt="uppercase" lts="0.5px" mb="xs" style={{ borderBottom: '1px solid var(--mantine-color-default-border)', paddingBottom: '2px' }}>
+            {title}
+        </Text>
+        <Stack gap={0}>{children}</Stack>
+    </Paper>
 );
 
 const PaymentDetailModal = ({ opened, onClose, record, handlers }) => {
     if (!record) return null;
 
-    // Logic trạng thái dựa trên respCode
     const getStatusConfig = (code) => {
-        if (code === '00') return { label: 'THÀNH CÔNG', color: 'green' };
+        if (code === '00' || code === 'ACSP') return { label: 'THÀNH CÔNG', color: 'green' };
         if (code === '68') return { label: 'TIMEOUT', color: 'yellow' };
         return { label: 'THẤT BẠI', color: 'red' };
     };
 
-    const status = getStatusConfig(record.respcode);
-    const badgeLabel = `${status.label} - ${record.respcode || 'N/A'}`;
+    const status = getStatusConfig(record.respcode || record.status);
+    const formatMoney = (val) => Number(val || 0).toLocaleString() + ' VND';
 
     return (
         <Modal
             opened={opened}
             onClose={onClose}
-            title={<Text fw={600} size="sm" c="dimmed">CHI TIẾT GIAO DỊCH</Text>}
-            size="xl"
+            title={<Text fw={600} size="sm" c="dimmed">Chi tiết giao dịch</Text>}
+            size="850px"
             centered
-            scrollAreaComponent={ScrollArea.Autosize}
+            radius={20}
+            padding={0}
             styles={{
-                content: { borderRadius: '12px' },
-                header: { borderBottom: '1px solid #f1f3f5', marginBottom: '10px', padding: '12px 20px' },
-                body: { padding: '15px 25px' }
+                content: { borderRadius: '12px', overflow: 'hidden' },
+                header: { borderBottom: '1px solid var(--mantine-color-default-border)', margin: 0, padding: '12px 20px' },
+                body: { padding: 0 }
             }}
         >
-            <Stack gap="lg">
-                {/* Header: Số tiền & Badge trạng thái mới */}
-                <Group justify="space-between" align="center">
-                    <Text size="24px" fw={700} c="blue.9">
-                        {Number(record.amount).toLocaleString()} <Text span size="xs" fw={500}>VND</Text>
-                    </Text>
+            <ScrollArea.Autosize mah="calc(100vh - 120px)" p="md">
+                <Stack gap="sm">
+                    <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
 
-                    <Badge
-                        variant="outline" // Dùng outline để Badge thanh thoát hơn
-                        color={status.color}
-                        size="lg"
-                        radius="xl"
-                        h={32}
-                        px={15}
-                        styles={{
-                            root: {
-                                backgroundColor: `var(--mantine-color-${status.color}-light)`, // Nền siêu nhạt
-                                border: `1px solid var(--mantine-color-${status.color}-light-hover)`,
-                                textTransform: 'none',
-                                letterSpacing: '0.3px'
-                            },
-                            label: { fontWeight: 700, fontSize: '13px' }
-                        }}
-                        leftSection={<Box w={6} h={6} style={{ borderRadius: '50%', backgroundColor: `var(--mantine-color-${status.color}-filled)` }} />}
-                    >
-                        {badgeLabel}
-                    </Badge>
-                </Group>
+                        {/* CỘT 1: THÔNG TIN GIAO DỊCH GỐC */}
+                        <SectionBlock title="Thông tin giao dịch">
+                            <InfoRow label="Số tiền" value={formatMoney(record.amount)} />
 
-                <SimpleGrid cols={{ base: 1, sm: 2 }} spacing={60} verticalSpacing="xs">
-                    {/* CỘT 1: THÔNG TIN GIAO DỊCH */}
-                    <Stack gap={6}>
-                        <SectionTitle>Thông tin giao dịch</SectionTitle>
-                        <InfoCell label="Số lưu vết" value={record.traceNo} />
-                        <InfoCell label="Số tham chiếu" value={record.refCode} />
-                        <InfoCell label="Mã tham chiếu" value={record.transRef} />
-                        <InfoCell label="Loại giao dịch" value={MAPPER.transactionType[record.transactionType]} />
-                        <InfoCell label="Kênh" value={MAPPER.f60[record.f60] || record.f60} />
-                        <InfoCell label="Mã xử lý" value={record.procCode} />
-                    </Stack>
+                            <Box style={{ display: 'grid', gridTemplateColumns: '140px 1fr', gap: '10px', alignItems: 'center', marginBottom: '6px' }}>
+                                <Text size="xs" c="dimmed">Trạng thái</Text>
+                                <Group justify="flex-end">
+                                    <Badge color={status.color} variant="light" radius="sm">
+                                        {status.label} - {record.respcode || record.status || 'N/A'}
+                                    </Badge>
+                                </Group>
+                            </Box>
 
-                    {/* CỘT 2: THỜI GIAN & ĐỐI TÁC */}
-                    <Stack gap={6}>
-                        <SectionTitle>Thời gian & Tài khoản</SectionTitle>
-                        <InfoCell label="Ngày quyết toán" value={record.settlementDate} />
-                        <InfoCell label="Thời gian hệ thống" value={new Date(record.transDate).toLocaleString('vi-VN')} />
-                        <Divider my={4} variant="dotted" />
-                        <InfoCell label="NH gửi" value={handlers?.getBankName(record.bankId)} />
-                        <InfoCell label="TK gửi" value={record.fromAccount} />
-                        <InfoCell label="NH nhận" value={handlers?.getBankName(record.benId)} />
-                        <InfoCell label="TK nhận" value={record.toAccount} />
-                    </Stack>
-                </SimpleGrid>
+                            <InfoRow label="Mã tham chiếu" value={record.transRef} isLong />
+                            <InfoRow label="Số lưu vết" value={record.traceNo} />
+                            <InfoRow label="Số tham chiếu gốc" value={record.refCode} isLong />
+                            <InfoRow label="Loại giao dịch" value={MAPPER.transactionType[record.transactionType] || record.transactionType} />
+                            <InfoRow label="Kênh" value={MAPPER.f60[record.f60] || record.f60} />
+                            <InfoRow label="Mã xử lý" value={record.procCode} />
+                        </SectionBlock>
 
-                <Divider size="xs" color="gray.1" />
-
-                {/* THÔNG TIN BỔ SUNG: 2 cột đối xứng */}
-                <Box>
-                    <SectionTitle>Thông tin bổ sung</SectionTitle>
-                    <SimpleGrid cols={{ base: 1, sm: 2 }} spacing={60} mt={8} align="flex-start">
-                        <InfoCell
-                            label="Số tiền hoàn trả"
-                            value={Number(record.returnedAmount || 0).toLocaleString() + ' VND'}
-                            color="orange.8"
-                        />
-                        <Group justify="space-between" wrap="nowrap" gap="xl">
-                            <Text size="sm" c="dimmed" style={{ flexShrink: 0 }}>Nội dung</Text>
-                            <Text size="sm" fw={500} c="dark.4" ta="right" style={{ wordBreak: 'break-all', flex: 1 }}>
-                                {record.transContent || '---'}
-                            </Text>
-                        </Group>
+                        {/* CỘT 2: CHI TIẾT ĐỐI TÁC & NỘI DUNG */}
+                        <SectionBlock title="Chi tiết đối ứng">
+                            <InfoRow label="NH gửi" value={handlers?.getBankName(record.bankId)} />
+                            <InfoRow label="TK gửi" value={record.fromAccount} />
+                            <InfoRow label="NH nhận" value={handlers?.getBankName(record.benId)} />
+                            <InfoRow label="TK nhận" value={record.toAccount} />
+                            <InfoRow label="Thời gian GD" value={record.transDate ? new Date(record.transDate).toLocaleString('vi-VN') : '---'} />
+                            <InfoRow label="Nội dung" value={record.transContent} isLong />
+                            <InfoRow label="Số tiền hoàn trả" value={formatMoney(record.returnedAmount)} />
+                        </SectionBlock>
                     </SimpleGrid>
-                </Box>
-            </Stack>
+
+                    <Group justify="flex-end" p="xs">
+                        <Button variant="subtle" color="gray" onClick={onClose} radius="xl" size="sm" fw={600}>
+                            Đóng
+                        </Button>
+                    </Group>
+                </Stack>
+            </ScrollArea.Autosize>
         </Modal>
     );
 };

@@ -25,8 +25,8 @@ export const useSearch = (apiEndpoint) => {
                 sort: 'id,desc'
             };
 
-            // var response = await apiClient.get(apiEndpoint, { params });
-            const response = MOCK_API_RESPONSES[apiEndpoint] || { content: [], totalPages: 0, totalElements: 0 };
+            var response = await apiClient.get(apiEndpoint, { params });
+            // const response = MOCK_API_RESPONSES[apiEndpoint] || { content: [], totalPages: 0, totalElements: 0 };
             console.log("API Response for", apiEndpoint, "with params", params, ":", response);
             const { content, totalPages, totalElements } = response;
 

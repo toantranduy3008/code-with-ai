@@ -90,7 +90,7 @@ export function DisputeModal({ opened, onClose, record, onConfirm, loading, type
             onClose={onClose}
             centered
             radius="lg"
-            size="850px"
+            size="xl"
             title={<Text fw={700} size="sm" c="dimmed">Yêu cầu tra soát</Text>}
             padding={0}
             styles={{
@@ -114,24 +114,19 @@ export function DisputeModal({ opened, onClose, record, onConfirm, loading, type
                 <form onSubmit={form.onSubmit((v) => onConfirm?.(record?.seqNo, v))} style={{ padding: '20px' }}>
                     <Stack gap="md">
                         {/* 1. KHỐI THÔNG TIN GIAO DỊCH GỐC (2 CỘT) */}
-                        <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
+                        <SimpleGrid spacing="md">
                             <SectionBlock title="Thông tin giao dịch">
-                                <InfoRow label="Mã tham chiếu" value={record?.transRef} fw={700} isLong />
+                                <InfoRow label="Mã tham chiếu" value={record?.transRef} isLong />
                                 <InfoRow label="Số lưu vết" value={record?.traceNo} />
-                                <InfoRow label="Số tiền gốc" value={Number(record?.amount || 0).toLocaleString() + ' VND'} color="blue.6" fw={700} />
-                                <InfoRow label="Loại giao dịch" value={record?.transactionType} />
+                                <InfoRow label="Số tiền gốc" value={Number(record?.amount || 0).toLocaleString() + ' VND'} />
+                                <InfoRow label="Loại giao dịch" value={record?.transactionType == 'IBFT' ? 'Chuyển tiền' : 'Thanh toán'} />
                                 <InfoRow label="Thời gian" value={record?.transDate ? new Date(record.transDate).toLocaleString('vi-VN') : '---'} />
-                            </SectionBlock>
-
-                            <SectionBlock title="Đối tác & Trạng thái">
                                 <InfoRow label="NH gửi" value={handlers?.getBankName(record?.bankId)} />
                                 <InfoRow label="TK gửi" value={record?.fromAccount} />
                                 <InfoRow label="NH nhận" value={handlers?.getBankName(record?.benId)} />
                                 <InfoRow label="TK nhận" value={record?.toAccount} />
-                                <InfoRow label="Trạng thái gốc" value="Thành công" color="green.6" fw={700} />
                             </SectionBlock>
                         </SimpleGrid>
-
                         {/* 2. KHỐI NHẬP LIỆU CHI TIẾT (MÀU TÍM) */}
                         <Paper
                             withBorder

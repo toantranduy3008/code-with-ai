@@ -1,0 +1,20 @@
+.userButton {
+    display: block;
+    width: 100%;
+    padding: var(--mantine-spacing-xs);
+    border-radius: var(--mantine-radius-md);
+    color: var(--mantine-color-text);
+    transition: background-color 150ms ease, transform 100ms ease;
+}
+
+.userButton:hover {
+    background-color: var(--mantine-color-light-filled);
+    /* Màu tím nhẹ hoặc xám nhẹ tùy theme */
+    transform: translateX(4px);
+    /* Nhích nhẹ sang phải tạo cảm giác tương tác */
+}
+
+.userButton:active {
+    transform: scale(0.98);
+    /* Hiệu ứng nhấn nút */
+}

@@ -1,0 +1,70 @@
+/* TransactionResultModal.module.css */
+
+.modalContent {
+    overflow: hidden;
+    /* Hiệu ứng kính mờ cho overlay được định nghĩa trong styles của Modal */
+}
+
+.headerStatus {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px;
+    border-bottom: 1px dashed var(--mantine-color-dark-4);
+}
+
+/* Vòng tròn chứa Icon */
+.iconWrapper {
+    width: 72px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.iconWrapper:hover {
+    transform: scale(1.05);
+}
+
+/* Tờ biên lai - Phần quan trọng nhất để hợp tông DarkMode */
+.receiptPaper {
+    position: relative;
+    border-style: dashed !important;
+    transition: all 0.2s ease;
+    /* Trong Dark Mode, rgba trắng cực mỏng sẽ tạo hiệu ứng lớp phủ rất sang */
+    background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+/* Hiệu ứng "răng cưa" hoặc điểm nhấn cho biên lai nếu cần */
+.receiptPaper::before,
+.receiptPaper::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 4px;
+}
+
+.amountText {
+    letter-spacing: -0.5px;
+    /* Hiệu ứng phát sáng nhẹ cho số tiền trong Dark Mode */
+    text-shadow: 0 0 15px rgba(103, 65, 217, 0.1);
+}
+
+.closeButton {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    height: 48px;
+    transition: all 0.2s ease;
+}
+
+/* Responsive cho mobile */
+@media (max-width: 480px) {
+    .headerStatus {
+        padding: 20px 10px;
+    }
+}

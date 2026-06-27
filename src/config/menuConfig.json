@@ -39,52 +39,6 @@
                     "path": "/bankdemo/app/search/transaction-logs"
                 }
             ]
-        },
-        {
-            "id": "users",
-            "label": "Người dùng",
-            "icon": "IconUsers",
-            "path": "/bankdemo/app/users",
-            "children": [
-                {
-                    "id": "users-list",
-                    "label": "User List",
-                    "path": "/bankdemo/app/users/list"
-                },
-                {
-                    "id": "users-add",
-                    "label": "Add User",
-                    "path": "/bankdemo/app/users/add"
-                },
-                {
-                    "id": "users-roles",
-                    "label": "Roles",
-                    "path": "/bankdemo/app/users/roles"
-                }
-            ]
-        },
-        {
-            "id": "settings",
-            "label": "Cài đặt",
-            "icon": "IconSettings",
-            "path": "/bankdemo/app/settings",
-            "children": [
-                {
-                    "id": "settings-general",
-                    "label": "General",
-                    "path": "/bankdemo/app/settings/general"
-                },
-                {
-                    "id": "settings-security",
-                    "label": "Security",
-                    "path": "/bankdemo/app/settings/security"
-                },
-                {
-                    "id": "settings-notifications",
-                    "label": "Notifications",
-                    "path": "/bankdemo/app/settings/notifications"
-                }
-            ]
         }
     ]
 }

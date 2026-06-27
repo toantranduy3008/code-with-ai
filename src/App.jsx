@@ -14,6 +14,7 @@ import IncomingPaymentPage from './pages/IncomingPaymentPage';
 import OutgoingPaymentPage from './pages/OutgoingPaymentPage';
 import OutgoingDisputePage from './pages/OutgoingDisputePage';
 import IncomingDisputePage from './pages/IncomingDisputePage';
+import AccountInfo from './pages/AccountInfo';
 
 // Component bảo vệ và bọc Layout dùng chung
 function ProtectedDashboard() {
@@ -86,6 +87,9 @@ function AppRoutes() {
             element={<BaseSearchPage configId="transaction-logs" />}
           />
         </Route>
+
+        {/* Thông tin người dùng */}
+        <Route path="/bankdemo/app/account-info" element={<AccountInfo />} />
       </Route>
 
       {/* Điều hướng mặc định */}

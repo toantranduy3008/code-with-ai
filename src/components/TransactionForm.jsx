@@ -39,7 +39,15 @@ export const TransactionForm = ({
     };
 
     const handleSourceToChange = (val) => {
-        onFieldChange('sourceTo', val || '');
+        // onFieldChange('sourceTo', val || '');
+        onUpdateFields({
+            sourceTo: val,          // Cập nhật giá trị mới của ô đang nhập
+            beneficiaryName: '',     // Reset tên
+            amount: 0,               // Reset tiền
+            f63: '',                 // Reset token inquiry
+            description: '',          // Reset nội dung
+            destinationType: ''       // Reset số tài khoản/ thẻ
+        });
     };
 
     // const handleDestinationBankChange = (val) => {
@@ -84,7 +92,7 @@ export const TransactionForm = ({
                             value={formData.sourceFrom || ''}
                             onChange={handleSourceFromChange}
                             radius="md"
-                            size="md"
+                            // size="md"
                             leftSection={<IconWallet size={18} stroke={1.5} color="var(--mantine-color-violet-filled)" />}
                         />
                     </Stack>
@@ -99,26 +107,31 @@ export const TransactionForm = ({
                         value={formData.sourceTo || ''}
                         onChange={handleSourceToChange}
                         radius="md"
-                        size="md"
+                        // size="md"
                         leftSection={<IconArrowRightCircle size={18} stroke={1.5} color="var(--mantine-color-gray-6)" />}
                     />
                 </SimpleGrid>
 
-                <Stack gap={6}>
-                    <Select
-                        label="Ngân hàng nhận"
-                        placeholder={fetchingBanks ? "Đang tải danh sách..." : "Chọn ngân hàng nhận"}
-                        data={banks}
-                        rightSection={fetchingBanks ? <Loader size="xs" /> : null}
-                        disabled={fetchingBanks}
-                        value={formData.destinationBank || ''}
-                        onChange={handleDestinationBankChange}
-                        radius="md"
-                        size="md"
-                        searchable
-                        leftSection={<IconBuildingBank size={18} color="var(--mantine-color-violet-filled)" />}
-                    />
-                </Stack>
+                {
+                    formData.sourceTo === 'ACC' && (
+                        <Stack gap={6}>
+                            <Select
+                                label="Ngân hàng nhận"
+                                placeholder={fetchingBanks ? "Đang tải danh sách..." : "Chọn ngân hàng nhận"}
+                                data={banks}
+                                rightSection={fetchingBanks ? <Loader size="xs" /> : null}
+                                disabled={fetchingBanks}
+                                value={formData.destinationBank || ''}
+                                onChange={handleDestinationBankChange}
+                                radius="md"
+                                // size="md"
+                                searchable
+                                leftSection={<IconBuildingBank size={18} color="var(--mantine-color-violet-filled)" />}
+                            />
+                        </Stack>
+                    )
+                }
+
 
                 <TextInput
                     label="Số tài khoản/ Thẻ nhận"
@@ -129,7 +142,7 @@ export const TransactionForm = ({
                     value={formData.destinationType || ''}
                     onChange={handleDestinationTypeChange}
                     radius="md"
-                    size="md"
+                    // size="md"
                     // disabled={qrType === 'dynamic'}
                     onBlur={onInquiryBlur}
                 />
@@ -141,14 +154,13 @@ export const TransactionForm = ({
                         readOnly
                         placeholder="Tên người thụ hưởng"
                         radius="md"
-                        size="md"
-                        variant="filled"
+                        // size="md"
                         leftSection={<IconShieldCheck size={18} color={formData.beneficiaryName ? "green" : "gray"} />}
                         styles={() => ({
                             input: {
                                 textTransform: 'uppercase',
-                                backgroundColor: 'var(--mantine-color-violet-light)',
-                                color: 'var(--mantine-color-violet-filled)',
+                                // backgroundColor: 'var(--mantine-color-violet-light)',
+                                // color: 'var(--mantine-color-violet-filled)',
                                 border: '1px solid var(--mantine-color-violet-light-hover)',
                             },
                         })}
@@ -168,8 +180,16 @@ export const TransactionForm = ({
                             rightSection={inquiryLoading ? <Loader size="xs" /> : null}
                             value={formData.f63 || ''}
                             radius="md"
-                            size="md"
-                            disabled
+                            // size="md"
+                            readOnly
+                            styles={() => ({
+                                input: {
+                                    textTransform: 'uppercase',
+                                    // backgroundColor: 'var(--mantine-color-violet-light)',
+                                    // color: 'var(--mantine-color-violet-filled)',
+                                    border: '1px solid var(--mantine-color-violet-light-hover)',
+                                },
+                            })}
                         />
                     </Stack>
                 )}
@@ -184,7 +204,8 @@ export const TransactionForm = ({
                         decimalSeparator="."
                         suffix=" VND"
                         hideControls
-                        radius="md" size="md"
+                        radius="md"
+                        // size="md"
                         allowNegative={false}
                         styles={{
                             input: {
@@ -202,7 +223,7 @@ export const TransactionForm = ({
                     value={formData.description || ''}
                     onChange={handleDescriptionChange}
                     radius="md"
-                    size="md"
+                // size="md"
                 // disabled={qrType === 'dynamic'}
                 />
 
@@ -215,7 +236,7 @@ export const TransactionForm = ({
                         leftSection={<IconQrcode size={18} />}
                         onClick={onQRClick}
                         radius="md"
-                        size="md"
+                    // size="md"
                     >
                         Quét QR
                     </Button>
@@ -224,7 +245,7 @@ export const TransactionForm = ({
                         loading={loading}
                         onClick={onTransferClick}
                         radius="md"
-                        size="md"
+                        // size="md"
                         leftSection={<IconSend size={18} />}
                         disabled={!formData.beneficiaryName || inquiryLoading}
                         style={{

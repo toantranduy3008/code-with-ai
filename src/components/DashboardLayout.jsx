@@ -1,12 +1,13 @@
 
-import { AppShell, NavLink, Group, Button, Text, Avatar, Collapse, ScrollArea, Box } from '@mantine/core'
-import { IconHome, IconUsers, IconSettings, IconLogout, IconChevronDown, IconArrowsExchange, IconSearch, IconChevronLeft, IconMenu2 } from '@tabler/icons-react'
+import { AppShell, NavLink, Group, Button, Text, Avatar, Collapse, ScrollArea, Box, UnstyledButton, Tooltip } from '@mantine/core'
+import { IconHome, IconUsers, IconSettings, IconLogout, IconChevronDown, IconArrowsExchange, IconSearch, IconChevronLeft, IconMenu2, IconChevronRight } from '@tabler/icons-react'
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/useAuth.js'
 import menuConfig from '../config/menuConfig.json'
 import ColorSchemeToggle from './ColorSchemeToggle'
 import { useDisclosure } from '@mantine/hooks';
+import classes from './DashboardLayout.module.css' // Import CSS Modules;
 // Icon mapping
 const iconMap = {
     IconHome,
@@ -116,7 +117,7 @@ export default function DashboardLayout({ children }) {
                     backgroundColor: 'var(--mantine-color-body)',
                     display: 'flex',
                     flexDirection: 'column',
-                    minHeight: '100vh'
+                    minHeight: '100vh',
                 }
             }}
 
@@ -129,22 +130,39 @@ export default function DashboardLayout({ children }) {
                 }}
             >
                 <AppShell.Section pb="md" style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}>
-                    <Group justify="space-between" wrap="nowrap">
-                        <Group gap="sm" wrap="nowrap" style={{ flex: 1, minWidth: 0 }}>
-                            <Avatar src={user?.avatar} name={user?.username} color="violet" radius="xl" />
-                            <div style={{ flex: 1, minWidth: 0 }}>
-                                <Text size="sm" fw={600} truncate c="var(--mantine-color-text)">
-                                    {user?.username || 'Guest'}
-                                </Text>
-                                <Text size="xs" c="dimmed" truncate>
-                                    {user?.fullName || user?.username}
-                                </Text>
-                            </div>
-                        </Group>
-                        <ColorSchemeToggle />
+                    <Group justify="space-between" wrap="nowrap" gap={4}>
+                        {/* Khối bên trái: Avatar + Tên */}
+                        <UnstyledButton
+                            className={classes.userButton}
+                            onClick={() => navigate('/bankdemo/app/account-info')}
+                            style={{ flex: 1, minWidth: 0 }} // Quan trọng: minWidth: 0 để truncate hoạt động
+                        >
+                            <Group gap="sm" wrap="nowrap">
+                                <Avatar
+                                    src={user?.avatar}
+                                    radius="xl"
+                                    color="violet"
+                                    variant="light"
+                                    name={user?.username}
+                                    size="md" // Cố định size để không bị bóp méo
+                                />
+                                <div style={{ flex: 1, minWidth: 0 }}>
+                                    <Text size="sm" fw={700} truncate="end">
+                                        {user?.username || 'toantd'}
+                                    </Text>
+                                    <Text size="xs" c="dimmed" truncate="end">
+                                        {user?.fullName || 'Quản trị viên'}
+                                    </Text>
+                                </div>
+                            </Group>
+                        </UnstyledButton>
+
+                        {/* Khối bên phải: Toggle Darkmode */}
+                        <Box pr="xs">
+                            <ColorSchemeToggle />
+                        </Box>
                     </Group>
                 </AppShell.Section>
-
                 {/* Body: Navigation - Dùng ScrollArea để menu không bị tràn */}
                 <AppShell.Section grow component={ScrollArea} my="md">
                     <div className="space-y-1">
@@ -167,15 +185,6 @@ export default function DashboardLayout({ children }) {
             </AppShell.Navbar>
 
             <AppShell.Main>
-                <Button
-                    onClick={toggle}
-                    variant="subtle"
-                    size="xs"
-                    mb="md"
-                    leftSection={opened ? <IconChevronLeft size={16} /> : <IconMenu2 size={16} />}
-                >
-                    {opened ? 'Thu gọn menu' : 'Mở rộng menu'}
-                </Button>
                 <Box style={{ flex: 1, backgroundColor: 'var(--mantine-color-body)' }}>
                     {children}
                 </Box>

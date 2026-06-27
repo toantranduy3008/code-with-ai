@@ -6,29 +6,33 @@ import {
     Group,
     Divider,
     Text,
-    Loader
+    Loader,
+    Button,
+    useMantineTheme
 } from '@mantine/core';
-import { IconCheck, IconX } from '@tabler/icons-react';
+import { IconCheck, IconX, IconCalendarTime } from '@tabler/icons-react';
+// Import CSS Modules
+import classes from './TransactionResultModal.module.css';
 
 const getStatusConfig = (code) => {
     switch (code) {
         case "00":
             return {
-                icon: <IconCheck size={55} color="green" />,
+                icon: <IconCheck size={45} stroke={3} />,
                 color: "green",
-                label: "THÀNH CÔNG"
+                label: "Giao dịch thành công!"
             };
         case "68":
             return {
-                icon: <Loader size={55} color="orange" />,
+                icon: <Loader size={45} />,
                 color: "orange",
-                label: "ĐANG CHỜ XỬ LÝ (TIMEOUT)"
+                label: "Đang chờ xử lý"
             };
         default:
             return {
-                icon: <IconX size={55} color="red" />,
+                icon: <IconX size={45} stroke={3} />,
                 color: "red",
-                label: "THẤT BẠI"
+                label: "Giao dịch thất bại"
             };
     }
 };
@@ -40,13 +44,24 @@ export const TransactionResultModal = ({
     formData,
     onCloseComplete
 }) => {
+    const theme = useMantineTheme();
+    const isDark = theme.colorScheme === 'dark';
     const status = getStatusConfig(transactionResult?.f39);
+
+    // Tính toán màu sắc động dựa trên trạng thái Dark Mode
+    const dynamicColors = {
+        modalBg: isDark ? theme.colors.dark[8] : theme.white,
+        headerBg: isDark
+            ? (status.color === 'green' ? 'rgba(43, 138, 62, 0.12)' : 'rgba(201, 42, 42, 0.12)')
+            : (status.color === 'green' ? theme.colors.green[0] : theme.colors.red[0]),
+        textPrimary: isDark ? theme.colors.dark[0] : theme.colors.gray[9],
+        amount: isDark ? theme.colors.violet[4] : theme.colors.violet[7],
+        border: isDark ? theme.colors.dark[4] : theme.colors.gray[2]
+    };
 
     const handleClose = () => {
         onClose();
-        if (onCloseComplete) {
-            onCloseComplete();
-        }
+        if (onCloseComplete) onCloseComplete();
     };
 
     return (
@@ -54,74 +69,69 @@ export const TransactionResultModal = ({
             opened={opened}
             onClose={handleClose}
             centered
-            radius="xl" // Bo góc tròn hơn nhìn sẽ thân thiện hơn
+            radius="24px"
             size="md"
-            withCloseButton={false} // Tự tạo nút đóng ở dưới cho cân đối
-            padding={0} // Để mình tùy biến background header
+            withCloseButton={false}
+            padding={0}
+            styles={{
+                content: {
+                    backgroundColor: dynamicColors.modalBg,
+                    border: isDark ? `1px solid ${theme.colors.dark[5]}` : 'none'
+                },
+                // overlay: { backdropFilter: 'blur(8px)' }
+            }}
+            className={classes.modalContent}
         >
             <Stack gap={0}>
-                {/* Phần Header Màu sắc theo trạng thái */}
-                <Box
-                    p="xl"
-                    bg={status.color === 'green' ? 'green.0' : 'red.0'}
-                    style={{
-                        borderRadius: '24px 24px 0 0',
-                        borderBottom: `1px dashed var(--mantine-color-${status.color}-2)`
-                    }}
-                >
-                    <Stack align="center" gap="xs">
-                        {/* Hiệu ứng vòng tròn xung quanh Icon */}
-                        <Box
-                            style={{
-                                background: 'white',
-                                borderRadius: '50%',
-                                padding: '10px',
-                                boxShadow: '0 8px 20px rgba(0,0,0,0.05)'
-                            }}
-                        >
+                {/* Header Trạng Thái */}
+                <Box className={classes.headerStatus} bg={dynamicColors.headerBg}>
+                    <Box
+                        className={classes.iconWrapper}
+                        style={{ backgroundColor: isDark ? theme.colors.dark[6] : theme.white }}
+                    >
+                        <Box style={{ color: theme.colors[status.color][6], display: 'flex' }}>
                             {status.icon}
                         </Box>
-                        <Text size="xl" fw={800} c={`${status.color}.9`} mt="sm" family="monospace">
-                            {status.label === 'THÀNH CÔNG' ? 'Giao dịch thành công!' : 'Giao dịch thất bại'}
-                        </Text>
-                        <Text size="sm" c={`${status.color}.6`} fw={500} family="monospace">
+                    </Box>
+
+                    <Text size="lg" fw={800} c={status.color === 'green' ? 'green.5' : 'red.5'}>
+                        {status.label}
+                    </Text>
+
+                    <Group gap={5} c="dimmed">
+                        <IconCalendarTime size={14} />
+                        <Text size="xs" fw={500} family="monospace">
                             {new Date().toLocaleString('vi-VN')}
                         </Text>
-                    </Stack>
+                    </Group>
                 </Box>
 
-                {/* Phần Chi tiết Giao dịch */}
                 <Box p="xl">
-                    <Stack gap="lg">
+                    <Stack gap="xl">
+                        {/* Khu vực Số tiền */}
                         <Box ta="center">
-                            <Text size="xs" c="dimmed" tt="uppercase" lts={1} fw={700} mb={5}>Số tiền giao dịch</Text>
-                            <Text size="32px" fw={800} c="dark.6">
-                                {Intl.NumberFormat('vi-VN').format(formData.amount)}
-                                <Text component="span" size="lg" ml={5}>VND</Text>
+                            <Text size="xs" c="dimmed" tt="uppercase" lts={1.2} fw={700} mb={4}>Số tiền giao dịch</Text>
+                            <Text size="32px" fw={700} c={dynamicColors.amount} className={classes.amountText}>
+                                {Intl.NumberFormat('vi-VN').format(formData?.amount || 0)}
+                                <Text component="span" size="lg" ml={6} fw={700}>VND</Text>
                             </Text>
                         </Box>
 
-                        <Paper withBorder p="lg" radius="lg" style={{ borderStyle: 'dashed', backgroundColor: '#fafafa' }}>
-                            <Stack gap="sm">
-                                <Group justify="space-between">
-                                    <Text size="sm" c="dimmed">Người thụ hưởng</Text>
-                                    <Text size="sm" fw={600}>{formData.beneficiaryName}</Text>
-                                </Group>
+                        {/* Tờ biên lai chi tiết */}
+                        <Paper
+                            p="lg"
+                            radius="xl"
+                            withBorder
+                            className={classes.receiptPaper}
+                            style={{ borderColor: dynamicColors.border }}
+                        >
+                            <Stack gap="md">
+                                <DetailRow label="Mã phản hồi" value={transactionResult?.f39} colors={dynamicColors} isMono />
+                                <DetailRow label="Người thụ hưởng" value={formData?.beneficiaryName} colors={dynamicColors} />
+                                <DetailRow label="Số lưu vết" value={transactionResult?.f11} colors={dynamicColors} isMono />
 
-                                <Group justify="space-between">
-                                    <Text size="xs" c="dimmed">Mã giao dịch (STAN)</Text>
-                                    <Text size="xs" fw={600} family="monospace">{transactionResult?.f11 || 'N/A'}</Text>
-                                </Group>
-                                <Group justify="space-between">
-                                    <Text size="xs" c="dimmed">Mã tham chiếu (F63)</Text>
-                                    <Text size="xs" fw={600} family="monospace">{formData?.f63 || 'N/A'}</Text>
-                                </Group>
-                                <Group justify="space-between">
-                                    <Text size="xs" c="dimmed">Nội dung</Text>
-                                    <Text size="xs" fw={500} ta="right" style={{ maxWidth: '60%' }}>
-                                        {formData.description || 'Chuyển tiền qua QR'}
-                                    </Text>
-                                </Group>
+                                <DetailRow label="Mã tham chiếu (F63)" value={formData?.f63} colors={dynamicColors} isMono />
+                                <DetailRow label="Nội dung" value={formData?.description || 'Chuyển tiền qua App'} colors={dynamicColors} />
                             </Stack>
                         </Paper>
                     </Stack>
@@ -130,3 +140,20 @@ export const TransactionResultModal = ({
         </Modal>
     );
 };
+
+// Component hỗ trợ hiển thị dòng chi tiết
+const DetailRow = ({ label, value, colors, isMono }) => (
+    <Group justify="space-between" align="flex-start" wrap="nowrap">
+        <Text size="sm" c="dimmed" style={{ whiteSpace: 'nowrap' }}>{label}</Text>
+        <Text
+            size="sm"
+            fw={600}
+            c={colors.textPrimary}
+            ta="right"
+            family={isMono ? 'monospace' : 'inherit'}
+            style={{ wordBreak: 'break-all' }}
+        >
+            {value || 'N/A'}
+        </Text>
+    </Group>
+);

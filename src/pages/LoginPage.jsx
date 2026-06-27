@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Container,
     Paper,
@@ -21,6 +21,18 @@ import ColorSchemeToggle from '../components/ColorSchemeToggle';
 import apiClient from '../config/apiClient.js';
 import napasLogo from '../assets/napas-logo.svg';
 import { motion, useAnimation } from 'framer-motion';
+import DifyChatbot from '../components/DifyChatbot.jsx';
+
+// Khởi tạo object cấu hình ở Global Scope
+if (typeof window !== 'undefined') {
+    window.difyChatbotConfig = {
+        token: 'F2iaGu6lzc1J1luc',
+        baseUrl: 'https://ai-tckt.napas.com.vn',
+        inputs: {},
+        systemVariables: {},
+        userVariables: {},
+    };
+}
 
 export default function LoginPage() {
     const [loading, setLoading] = useState(false);
@@ -31,6 +43,83 @@ export default function LoginPage() {
     const { login } = useAuth();
     const navigate = useNavigate();
     const controls = useAnimation();
+
+    useEffect(() => {
+        const scriptId = 'F2iaGu6lzc1J1luc';
+        const styleId = 'dify-chatbot-custom-style';
+
+        // 1. Inject Style tùy chỉnh vào head
+        let style = document.getElementById(styleId);
+        if (!style) {
+            style = document.createElement('style');
+            style.id = styleId;
+            style.innerHTML = `
+                #dify-chatbot-bubble-button {
+                    background-color: #1C64F2 !important;
+                    position: fixed !important;
+                    bottom: 24px !important;
+                    right: 24px !important;
+                    z-index: 999999 !important;
+                    display: flex !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                }
+                #dify-chatbot-bubble-window {
+                    width: 24rem !important;
+                    height: 40rem !important;
+                    position: fixed !important;
+                    bottom: 90px !important;
+                    right: 24px !important;
+                    z-index: 999999 !important;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Hàm hỗ trợ khởi tạo lại Dify nếu SDK đã được nạp vào window
+        const initDify = () => {
+            if (window.Chatbot && typeof window.Chatbot.init === 'function') {
+                window.Chatbot.init(window.difyChatbotConfig);
+            } else if (typeof window.initDifyChatbot === 'function') {
+                window.initDifyChatbot();
+            }
+        };
+
+        // 2. Tạo và kiểm soát vòng đời Script
+        let script = document.getElementById(scriptId);
+        if (!script) {
+            script = document.createElement('script');
+            script.src = 'https://ai-tckt.napas.com.vn/embed.min.js';
+            script.id = scriptId;
+            script.async = true;
+
+            // ÉP BUỘC CHẠY KHỞI TẠO NGAY KHI FILE SCRIPT TẢI VỀ THÀNH CÔNG
+            script.onload = () => {
+                setTimeout(() => {
+                    initDify();
+                }, 200); // Delay nhẹ 200ms để đảm bảo bộ nhớ window được đồng bộ
+            };
+
+            document.body.appendChild(script);
+        } else {
+            // Trường hợp quay lại trang Login và script đã nằm sẵn trong DOM
+            initDify();
+        }
+
+        // Dọn dẹp chatbot khi rời khỏi trang Đăng nhập
+        return () => {
+            const existingScript = document.getElementById(scriptId);
+            if (existingScript) existingScript.remove();
+
+            const existingStyle = document.getElementById(styleId);
+            if (existingStyle) existingStyle.remove();
+
+            const bubbleBtn = document.getElementById('dify-chatbot-bubble-button');
+            const bubbleWin = document.getElementById('dify-chatbot-bubble-window');
+            if (bubbleBtn) bubbleBtn.remove();
+            if (bubbleWin) bubbleWin.remove();
+        };
+    }, []);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -76,9 +165,8 @@ export default function LoginPage() {
                 <ColorSchemeToggle />
             </div>
 
-            {/* Bố cục chính chia làm 2 cột: Trái (Form Login) - Phải (Iframe Chatbot) */}
+            {/* Bố cục chính chia làm 2 cột */}
             <div className="flex-1 flex flex-col lg:flex-row items-center justify-center gap-8 max-w-7xl w-full mx-auto px-6 py-8">
-
                 {/* CỘT TRÁI: FORM ĐĂNG NHẬP */}
                 <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
                     <Container size="xs" className="w-full max-w-105 m-0 p-0">
@@ -158,13 +246,14 @@ export default function LoginPage() {
                         </motion.div>
                     </Container>
                 </div>
-
             </div>
 
-            {/* Footer bản quyền phía dưới cùng */}
+            {/* Footer bản quyền */}
             <Text ta="center" size="xs" c="dimmed" pb="xl" className="opacity-70">
                 Copyright © 2026 **Napas**. All rights reserved.
             </Text>
+
+            <DifyChatbot />
         </div>
     );
 }

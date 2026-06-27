@@ -8,6 +8,8 @@ import menuConfig from '../config/menuConfig.json'
 import ColorSchemeToggle from './ColorSchemeToggle'
 import { useDisclosure } from '@mantine/hooks';
 import classes from './DashboardLayout.module.css' // Import CSS Modules;
+import DiffyChatbot from './DifyChatbot.jsx'
+
 // Icon mapping
 const iconMap = {
     IconHome,
@@ -187,7 +189,9 @@ export default function DashboardLayout({ children }) {
             <AppShell.Main>
                 <Box style={{ flex: 1, backgroundColor: 'var(--mantine-color-body)' }}>
                     {children}
+                    <DiffyChatbot />
                 </Box>
+
             </AppShell.Main>
         </AppShell>
     )

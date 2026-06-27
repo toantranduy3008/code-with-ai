@@ -38,6 +38,7 @@ export default function TransactionPage() {
 
     // ===== QR SCANNER LOGIC =====
     const handleQRDetected = async (qr) => {
+        console.log("QR Detected:", qr);
         const newData = setQRData(qr);
         updateMultipleFields(newData);
         handleCloseQRModal();

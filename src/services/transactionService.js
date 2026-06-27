@@ -32,7 +32,7 @@ export const transactionService = {
     /**
      * Kiểm tra thông tin người thụ hưởng (Inquiry)
      */
-    async fetchInquiry(creditorAgent, toAccount, toAccountType = 'ACC', fromAccountType = 'ACC') {
+    async fetchInquiry(creditorAgent, toAccount, toAccountType = 'ACC', fromAccountType = 'ACC', recordData = '') {
         if (!creditorAgent || !toAccount) {
             return null;
         }
@@ -43,7 +43,8 @@ export const transactionService = {
                     creditorAgent,
                     toAccount,
                     toAccountType,
-                    fromAccountType
+                    fromAccountType,
+                    recordData
                 }
             });
             return response;

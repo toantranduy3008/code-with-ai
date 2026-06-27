@@ -59,3 +59,24 @@ export const isValidQRData = (data) => {
         (data.amount || data.destinationBank || data.description)
     )
 }
+
+// Hàm tìm và lấy toàn bộ chuỗi gốc của ID 62 từ chuỗi QR tổng
+export const extractRawId62 = (qrString) => {
+    if (!qrString) return '';
+    let index = 0;
+    while (index < qrString.length) {
+        const tag = qrString.substring(index, index + 2);
+        const lengthStr = qrString.substring(index + 2, index + 4);
+        if (!tag || !lengthStr) break;
+
+        const length = parseInt(lengthStr, 10);
+        const value = qrString.substring(index + 4, index + 4 + length);
+
+        if (tag === '62') {
+            // Trả về nguyên cụm TLV của ID 62 (ví dụ: 62480308DCIEDUVN...)
+            return qrString.substring(index, index + 4 + length);
+        }
+        index += 4 + length;
+    }
+    return '';
+};

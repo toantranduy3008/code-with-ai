@@ -6,9 +6,8 @@ export const useInquiry = (onInquirySuccess, onInquiryError) => {
     const [inquiryLoading, setInquiryLoading] = useState(false);
 
     const executeInquiry = useCallback(async (formData) => {
-        const { destinationBank, destinationType, sourceTo, sourceFrom } = formData;
-
-        // Validation nhanh
+        console.log("Executing Inquiry with formData:", formData);
+        const { destinationBank, destinationType, sourceTo, sourceFrom, recordData } = formData;
         if (!destinationBank || !destinationType || !sourceTo || !sourceFrom) {
             return;
         }
@@ -19,7 +18,8 @@ export const useInquiry = (onInquirySuccess, onInquiryError) => {
                 destinationBank,
                 destinationType,
                 sourceTo,
-                sourceFrom
+                sourceFrom,
+                recordData
             );
 
             console.log("Response from Inquiry API:", response);

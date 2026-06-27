@@ -2,6 +2,7 @@ import { useRef, useState, useCallback, useEffect } from 'react';
 import jsQR from 'jsqr';
 import { QRPay } from 'vietnam-qr-pay';
 import { showToast } from '../config/toast';
+import { extractRawId62 } from '../utils/qrScanner';
 
 export const useQRScanner = (onQRScanned) => {
     const videoRef = useRef(null);
@@ -34,6 +35,8 @@ export const useQRScanner = (onQRScanned) => {
         try {
             const qr = new QRPay(qrString);
             if (qr.isValid) {
+                const rawId62 = extractRawId62(qrString);
+                qr.rawId62 = rawId62;
                 onQRScannedRef.current(qr);
             } else {
                 showToast({
@@ -50,9 +53,7 @@ export const useQRScanner = (onQRScanned) => {
                 message: 'Không thể xử lý mã QR này'
             });
         }
-    }, []); // Hook này giờ không phụ thuộc vào gì cả
-
-    // 3. startScanning bây giờ sẽ "tĩnh", không bao giờ bị khởi tạo lại
+    }, []);
     const startScanning = useCallback(() => {
         const canvas = canvasRef.current;
         const video = videoRef.current;
@@ -91,8 +92,6 @@ export const useQRScanner = (onQRScanned) => {
             });
 
             streamRef.current = stream;
-
-            // Thay vì dùng setInterval để check Ref, ta dùng trực tiếp logic
             if (videoRef.current) {
                 videoRef.current.srcObject = stream;
                 videoRef.current.onloadedmetadata = () => {
@@ -131,6 +130,7 @@ export const useQRScanner = (onQRScanned) => {
                 const code = jsQR(imageData.data, imageData.width, imageData.height);
 
                 if (code) {
+                    console.log("QR Code detected from file:", code.data);
                     processQR(code.data);
                 } else {
                     showToast({
@@ -146,6 +146,7 @@ export const useQRScanner = (onQRScanned) => {
 
         if (fileInputRef.current) fileInputRef.current.value = "";
     }, [processQR]);
+
 
     return {
         videoRef,

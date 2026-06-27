@@ -39,7 +39,6 @@ export const TransactionForm = ({
     };
 
     const handleSourceToChange = (val) => {
-        // onFieldChange('sourceTo', val || '');
         onUpdateFields({
             sourceTo: val,          // Cập nhật giá trị mới của ô đang nhập
             beneficiaryName: '',     // Reset tên
@@ -50,9 +49,6 @@ export const TransactionForm = ({
         });
     };
 
-    // const handleDestinationBankChange = (val) => {
-    //     onFieldChange('destinationBank', val || '');
-    // };
     const handleDestinationBankChange = (val) => {
         onUpdateFields({
             destinationBank: val,          // Cập nhật giá trị mới của ô đang nhập

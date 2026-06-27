@@ -39,6 +39,7 @@ export const useTransactionForm = () => {
     }, []);
 
     const setQRData = useCallback((qrData) => {
+        console.log("Setting QR Data:", qrData);
         const beneficiary = qrData.consumer;
         const newData = {
             destinationType: beneficiary?.bankNumber || formData.destinationType,
@@ -46,7 +47,8 @@ export const useTransactionForm = () => {
             description: qrData.additionalData?.purpose || formData.description,
             destinationBank: beneficiary?.bankBin || formData.destinationBank,
             sourceTo: 'ACC',
-            sourceFrom: 'ACC'
+            sourceFrom: 'ACC',
+            recordData: qrData.rawId62 || '',
         };
         setQrType(qrData.initMethod === 11 ? 'static' : 'dynamic');
         return newData;

@@ -31,7 +31,7 @@ createRoot(document.getElementById('root')).render(
        để cho phép useMantineColorScheme() hoạt động
     */}
     <MantineProvider theme={theme} defaultColorScheme="light">
-      <Notifications position="bottom-right" zIndex={1000} />
+      <Notifications position="top-right" zIndex={1000} />
       <App />
     </MantineProvider>
   </StrictMode>,
